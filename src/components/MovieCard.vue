@@ -199,4 +199,15 @@ const onImgError = (e) => {
   color: var(--text-muted);
   font-weight: 600;
 }
+@media (max-width: 768px) {
+  .card-title {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-info {
+    gap: 1px;
+  }
+}
 </style>

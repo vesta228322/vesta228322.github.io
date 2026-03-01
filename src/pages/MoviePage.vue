@@ -512,24 +512,39 @@ onMounted(() => load(route.params.id))
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 900px) {
-  .movie-page { padding: 1.5rem 0 4rem; }
-  .movie-layout { grid-template-columns: 1fr; gap: 1.5rem; }
-  .sidebar { 
-    order: 2; /* Постер после заголовка */
-    flex-direction: row; 
-    align-items: center; 
+  .movie-page { padding: 1rem 0 4rem; }
+  .movie-layout { 
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
-    max-width: none;
   }
-  .poster-box { width: 120px; flex-shrink: 0; }
-  .score-box { flex: 1; align-items: flex-start; padding: 0.75rem 1rem; }
+  .sidebar { 
+    order: 2;
+    display: flex;
+    flex-direction: row; 
+    align-items: stretch; 
+    gap: 1rem;
+    max-width: none;
+    position: static;
+  }
+  .poster-box { 
+    width: 100px; 
+    flex-shrink: 0; 
+    border-radius: var(--radius-md);
+  }
+  .score-box { 
+    flex: 1; 
+    justify-content: center;
+    align-items: flex-start; 
+    padding: 0.75rem 1rem; 
+  }
   .score-row { align-items: flex-start; }
-  .score-num { font-size: 1.6rem; }
+  .score-num { font-size: 1.5rem; }
   .movie-header { order: 1; }
   .player-section { order: 3; }
   .cast-section { order: 4; }
   .similar-section { order: 5; }
-  .movie-title { font-size: 1.8rem; }
+  .movie-title { font-size: 1.7rem; }
   .backdrop, .backdrop-overlay { position: fixed; }
 }
 </style>

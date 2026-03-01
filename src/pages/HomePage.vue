@@ -444,11 +444,11 @@ onMounted(() => {
   .brand { font-size: 2.2rem; }
   .search-tabs { justify-content: flex-start; }
   .history-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
-  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; }
+  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
 }
 
 @media (max-width: 480px) {
-  .history-grid { grid-template-columns: repeat(2, 1fr); }
-  .movies-grid { grid-template-columns: repeat(3, 1fr); }
+  .history-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .movies-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
 }
 </style>
