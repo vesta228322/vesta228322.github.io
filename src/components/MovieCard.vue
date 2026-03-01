@@ -45,9 +45,12 @@ const props = defineProps({
   },
 });
 
-const posterUrl = computed(() =>
-  props.movie.poster_path ? `${TMDB_IMG}${props.movie.poster_path}` : null,
-);
+const posterUrl = computed(() => {
+  // Поддержка KP формата (полный URL) и TMDB формата (относительный путь)
+  if (props.movie.posterUrl) return props.movie.posterUrl
+  if (props.movie.poster_path) return `${TMDB_IMG}${props.movie.poster_path}`
+  return null
+})
 
 const releaseYear = computed(() => {
   const date = props.movie.release_date || props.movie.first_air_date || "";

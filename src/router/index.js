@@ -1,20 +1,21 @@
-import { createRouter, createWebHashHistory } from "vue-router";
-import HomePage from "@/pages/HomePage.vue";
-import SearchPage from "@/pages/SearchPage.vue";
-import MoviePage from "@/pages/MoviePage.vue";
+import { createRouter, createWebHashHistory } from 'vue-router'
+import HomePage from '@/pages/HomePage.vue'
+import MoviePage from '@/pages/MoviePage.vue'
+import TopPage from '@/pages/TopPage.vue'
 
 const routes = [
-  { path: "/", component: HomePage },
-  { path: "/search", component: SearchPage },
-  { path: "/movie/:id", component: MoviePage },
-];
+  { path: '/', component: HomePage },
+  { path: '/movie/:id', component: MoviePage },
+  { path: '/top', component: TopPage },
+  { path: '/search', redirect: '/' },
+]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior() {
-    return { top: 0 };
+    return { top: 0 }
   },
-});
+})
 
-export default router;
+export default router

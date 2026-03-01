@@ -51,4 +51,12 @@ export const getByGenre = (genreId, page = 1) =>
 
 // Список жанров
 export const getGenres = () =>
-  tmdb.get("/genre/movie/list").then((r) => r.data);
+  tmdb.get('/genre/movie/list').then((r) => r.data)
+
+// Случайный популярный фильм
+export const getRandomPopular = async () => {
+  const page = Math.floor(Math.random() * 10) + 1
+  const data = await tmdb.get('/movie/popular', { params: { page } }).then((r) => r.data)
+  const movies = data.results.filter((m) => m.poster_path && m.backdrop_path)
+  return movies[Math.floor(Math.random() * movies.length)]
+}

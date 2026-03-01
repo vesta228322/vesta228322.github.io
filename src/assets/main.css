@@ -97,21 +97,34 @@ img {
 }
 
 /* ===========================
-   Скроллбар
+   Скроллбар — красивый и большой
    =========================== */
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg-secondary);
+  border-radius: 10px;
+  margin: 4px 0;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 4px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+  border-radius: 10px;
+  border: 2px solid var(--bg-secondary);
+  transition: background 0.3s;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-2);
+  background: linear-gradient(180deg, var(--accent-2) 0%, var(--accent) 100%);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg-secondary);
 }
 
 /* ===========================

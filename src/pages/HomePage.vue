@@ -1,328 +1,472 @@
 <template>
   <div class="home">
-    <!-- Hero секция -->
-    <section class="hero" v-if="featured">
-      <div
-        class="hero-bg"
-        :style="{ backgroundImage: `url(${heroImg})` }"
-      ></div>
-      <div class="hero-overlay"></div>
-      <div class="container hero-content fade-in">
-        <div class="hero-badge">🔥 Сейчас популярно</div>
-        <h1 class="hero-title">{{ featured.title }}</h1>
-        <p class="hero-desc">{{ truncate(featured.overview, 180) }}</p>
-        <div class="hero-meta">
-          <span class="hero-rating"
-            >★ {{ featured.vote_average?.toFixed(1) }}</span
-          >
-          <span class="hero-year">{{
-            featured.release_date?.slice(0, 4)
-          }}</span>
-        </div>
-        <div class="hero-actions">
-          <RouterLink :to="`/movie/${featured.id}`" class="btn-primary">
-            ▶ Смотреть
-          </RouterLink>
-          <RouterLink :to="`/movie/${featured.id}`" class="btn-secondary">
-            Подробнее
-          </RouterLink>
-        </div>
+    <!-- Центральный блок -->
+    <div class="search-hero">
+      <div class="brand">
+        <span class="brand-icon">▶</span>
+        <span class="brand-name">Kino<span class="gradient-text">Flow</span></span>
       </div>
-    </section>
-    <section v-else class="hero hero-skeleton">
-      <div class="container">
-        <div
-          class="skeleton"
-          style="width: 200px; height: 28px; margin-bottom: 1rem"
-        ></div>
-        <div
-          class="skeleton"
-          style="width: 500px; height: 48px; margin-bottom: 1rem"
-        ></div>
-        <div class="skeleton" style="width: 380px; height: 24px"></div>
+      <p class="brand-sub">Смотри фильмы и сериалы онлайн</p>
+
+      <!-- Табы типа поиска -->
+      <div class="search-tabs">
+        <button
+          class="search-tab"
+          :class="{ active: searchType === 'title' }"
+          @click="setType('title')"
+        >Название</button>
+        <button
+          class="search-tab"
+          :class="{ active: searchType === 'kinopoisk' }"
+          @click="setType('kinopoisk')"
+        >ID Кинопоиск</button>
+        <button class="random-btn" :disabled="randomLoading" @click="goRandom">
+          <span>🎲</span>
+          {{ randomLoading ? 'Подбираем...' : 'Случайный фильм' }}
+        </button>
       </div>
-    </section>
 
-    <div class="container sections">
-      <!-- Сейчас в кино -->
-      <section class="movie-section fade-in">
-        <h2 class="section-title">Сейчас в кино <span>🍿</span></h2>
-        <div class="movies-grid" v-if="nowPlaying.length">
-          <MovieCard
-            v-for="m in nowPlaying.slice(0, 6)"
-            :key="m.id"
-            :movie="m"
-          />
-        </div>
-        <div class="movies-grid" v-else>
-          <div v-for="i in 6" :key="i" class="skeleton card-skeleton"></div>
-        </div>
-      </section>
+      <!-- Поисковая строка -->
+      <div class="search-box" :class="{ focused }">
+        <span class="search-ico">⌕</span>
+        <input
+          ref="inputRef"
+          v-model="query"
+          :placeholder="placeholder"
+          :inputmode="searchType === 'kinopoisk' ? 'numeric' : 'text'"
+          @focus="focused = true"
+          @blur="focused = false"
+          @keydown.enter="handleEnter"
+          @input="handleInput"
+        />
+        <button v-if="query" class="clear-btn" @click="clearSearch">✕</button>
+      </div>
+    </div>
 
-      <!-- Популярные -->
-      <section class="movie-section fade-in">
-        <div class="section-header">
-          <h2 class="section-title">Популярные <span>🔥</span></h2>
-          <RouterLink to="/search?sort=popular" class="see-all"
-            >Все →</RouterLink
-          >
-        </div>
-        <div class="movies-grid" v-if="popular.length">
-          <MovieCard v-for="m in popular.slice(0, 12)" :key="m.id" :movie="m" />
-        </div>
-        <div class="movies-grid" v-else>
-          <div v-for="i in 12" :key="i" class="skeleton card-skeleton"></div>
-        </div>
-      </section>
+    <div class="content-area container">
+      <!-- Загрузка -->
+      <div v-if="loading" class="movies-grid">
+        <div v-for="i in 12" :key="i" class="skeleton card-skeleton"></div>
+      </div>
 
-      <!-- Топ по рейтингу -->
-      <section class="movie-section fade-in">
-        <div class="section-header">
-          <h2 class="section-title">Топ по рейтингу <span>⭐</span></h2>
-          <RouterLink to="/search?sort=top" class="see-all">Все →</RouterLink>
+      <!-- Результаты поиска -->
+      <template v-else-if="searched">
+        <h2 class="section-title" v-if="movies.length">
+          Результаты поиска <span>🔍</span>
+        </h2>
+        <div v-if="movies.length" class="movies-grid fade-in">
+          <MovieCard v-for="m in movies" :key="m.id" :movie="m" />
         </div>
-        <div class="movies-grid" v-if="topRated.length">
-          <MovieCard
-            v-for="m in topRated.slice(0, 12)"
-            :key="m.id"
-            :movie="m"
-          />
+        <div v-else class="empty-state fade-in">
+          <span>🎬</span>
+          <p>Ничего не найдено. Попробуй другое название.</p>
         </div>
-        <div class="movies-grid" v-else>
-          <div v-for="i in 12" :key="i" class="skeleton card-skeleton"></div>
+      </template>
+
+      <!-- История просмотра -->
+      <template v-else>
+        <div v-if="history.length" class="section fade-in">
+          <div class="section-header">
+            <h2 class="section-title">История просмотра <span>🕐</span></h2>
+            <button class="clear-history-btn" @click="clearHistory">Очистить всё</button>
+          </div>
+          <!-- Карточки истории с кнопкой удаления -->
+          <div class="history-grid">
+            <div
+              v-for="m in history"
+              :key="m.id"
+              class="history-card-wrap"
+            >
+              <MovieCard :movie="m" />
+              <!-- Кнопка удаления появляется при наведении -->
+              <button
+                class="delete-card-btn"
+                title="Удалить из истории"
+                @click.prevent.stop="deleteFromHistory(m.id)"
+              >🗑</button>
+            </div>
+          </div>
         </div>
-      </section>
+        <div v-else class="empty-history fade-in">
+          <span>🎬</span>
+          <p>Твоя история просмотров появится здесь</p>
+          <p class="hint">Начни поиск фильма выше</p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import MovieCard from "@/components/MovieCard.vue";
-import { getPopular, getTopRated, getNowPlaying } from "@/api/tmdb";
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import MovieCard from '@/components/MovieCard.vue'
+import { searchKP, getKPTop } from '@/api/kp'
 
-const TMDB_BG = "https://image.tmdb.org/t/p/original";
+const router = useRouter()
 
-const popular = ref([]);
-const topRated = ref([]);
-const nowPlaying = ref([]);
-const featured = ref(null);
+const searchType = ref('title')
+const query = ref('')
+const movies = ref([])
+const loading = ref(false)
+const searched = ref(false)
+const focused = ref(false)
+const randomLoading = ref(false)
+const history = ref([])
+const inputRef = ref(null)
 
-const heroImg = computed(() =>
-  featured.value?.backdrop_path
-    ? `${TMDB_BG}${featured.value.backdrop_path}`
-    : "",
-);
+const placeholder = computed(() =>
+  searchType.value === 'kinopoisk'
+    ? 'Пример: 301 (Матрица), 435 (Бойцовский клуб)'
+    : 'Введите название фильма или сериала...'
+)
 
-const truncate = (str, len) =>
-  str && str.length > len ? str.slice(0, len) + "..." : str || "";
-
-onMounted(async () => {
+const loadHistory = () => {
   try {
-    const [pop, top, now] = await Promise.all([
-      getPopular(),
-      getTopRated(),
-      getNowPlaying(),
-    ]);
-    popular.value = pop.results;
-    topRated.value = top.results;
-    nowPlaying.value = now.results;
-    // Берём первый популярный с backdrop как герой
-    featured.value = pop.results.find((m) => m.backdrop_path) || pop.results[0];
-  } catch (e) {
-    console.error("Ошибка загрузки фильмов:", e);
+    history.value = JSON.parse(localStorage.getItem('kf_history') || '[]')
+  } catch {
+    history.value = []
   }
-});
+}
+
+const clearHistory = () => {
+  localStorage.removeItem('kf_history')
+  history.value = []
+}
+
+const deleteFromHistory = (id) => {
+  history.value = history.value.filter((m) => String(m.id) !== String(id))
+  localStorage.setItem('kf_history', JSON.stringify(history.value))
+}
+
+const setType = (type) => {
+  searchType.value = type
+  query.value = ''
+  movies.value = []
+  searched.value = false
+  inputRef.value?.focus()
+}
+
+let debounceTimer = null
+const handleInput = () => {
+  if (searchType.value === 'kinopoisk') {
+    query.value = query.value.replace(/\D/g, '')
+    return
+  }
+  clearTimeout(debounceTimer)
+  if (query.value.trim().length >= 2) {
+    debounceTimer = setTimeout(() => performSearch(), 700)
+  } else if (!query.value.trim()) {
+    movies.value = []
+    searched.value = false
+  }
+}
+
+const handleEnter = () => {
+  clearTimeout(debounceTimer)
+  if (searchType.value === 'kinopoisk') {
+    if (query.value.trim()) router.push(`/movie/${query.value.trim()}`)
+  } else {
+    performSearch()
+  }
+}
+
+const performSearch = async () => {
+  if (!query.value.trim()) return
+  loading.value = true
+  searched.value = true
+  movies.value = []
+  try {
+    const data = await searchKP(query.value.trim())
+    movies.value = data.results
+  } catch (e) {
+    console.error('Ошибка поиска:', e)
+  } finally {
+    loading.value = false
+  }
+}
+
+const clearSearch = () => {
+  query.value = ''
+  movies.value = []
+  searched.value = false
+  clearTimeout(debounceTimer)
+  inputRef.value?.focus()
+}
+
+const goRandom = async () => {
+  randomLoading.value = true
+  try {
+    const page = Math.floor(Math.random() * 5) + 1
+    const films = await getKPTop(page)
+    const filtered = films.filter((f) => f.posterUrl)
+    if (filtered.length) {
+      const movie = filtered[Math.floor(Math.random() * filtered.length)]
+      router.push(`/movie/${movie.id}`)
+    }
+  } catch (e) {
+    console.error(e)
+  } finally {
+    randomLoading.value = false
+  }
+}
+
+onMounted(() => {
+  loadHistory()
+  inputRef.value?.focus()
+})
 </script>
 
 <style scoped>
-/* ---- Hero ---- */
-.hero {
-  position: relative;
-  height: 580px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center top;
-  filter: blur(2px) brightness(0.4);
-  transform: scale(1.05);
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to right, var(--bg-primary) 30%, transparent 70%),
-    linear-gradient(to top, var(--bg-primary) 0%, transparent 40%);
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 580px;
-}
-
-.hero-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
-  padding: 4px 14px;
-  border-radius: var(--radius-xl);
-  font-size: 0.8rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  letter-spacing: 0.5px;
-}
-
-.hero-title {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  font-weight: 900;
-  line-height: 1.15;
-  margin-bottom: 0.75rem;
-  letter-spacing: -1px;
-}
-
-.hero-desc {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-}
-
-.hero-meta {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  align-items: center;
-}
-
-.hero-rating {
-  background: rgba(245, 197, 24, 0.15);
-  border: 1px solid rgba(245, 197, 24, 0.4);
-  color: var(--rating-gold);
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
-  font-weight: 800;
-}
-
-.hero-year {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
-  padding: 0.7rem 1.8rem;
-  border-radius: var(--radius-xl);
-  font-weight: 800;
-  font-size: 1rem;
-  box-shadow: var(--shadow-accent);
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px var(--accent-glow);
-}
-
-.btn-secondary {
-  background: var(--bg-glass);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border-hover);
-  color: var(--text-primary);
-  padding: 0.7rem 1.6rem;
-  border-radius: var(--radius-xl);
-  font-weight: 700;
-  font-size: 1rem;
-  transition:
-    background var(--transition),
-    border-color var(--transition);
-}
-
-.btn-secondary:hover {
-  background: var(--bg-card);
-  border-color: var(--accent);
-}
-
-.hero-skeleton {
-  background: var(--bg-secondary);
-  align-items: center;
-}
-
-/* ---- Секции ---- */
-.sections {
-  padding: 3rem 1.5rem;
+.home {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
 }
+
+/* ---- Герой-поиск ---- */
+.search-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1.5rem 2.5rem;
+  text-align: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 0.4rem;
+}
+
+.brand-icon {
+  color: var(--accent);
+  filter: drop-shadow(0 0 12px var(--accent));
+  font-size: 2.2rem;
+}
+
+.brand-sub {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.search-tab {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  position: relative;
+  transition: color var(--transition);
+}
+
+.search-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+  transition: background var(--transition);
+  border-radius: 2px;
+}
+
+.search-tab.active { color: var(--text-primary); }
+.search-tab.active::after {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+.search-tab:hover:not(.active) { color: var(--text-secondary); }
+
+.random-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-xl);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 1rem;
+  transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.random-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+.random-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.search-box {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 780px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 0 1.2rem;
+  gap: 0.75rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.search-box.focused {
+  border-color: var(--accent);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+.search-ico { font-size: 1.3rem; color: var(--text-muted); user-select: none; flex-shrink: 0; }
+
+.search-box input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1.05rem;
+  padding: 0.9rem 0;
+}
+
+.search-box input::placeholder { color: var(--text-muted); }
+
+.clear-btn {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: color var(--transition);
+}
+.clear-btn:hover { color: var(--text-primary); }
+
+/* ---- Контент ---- */
+.content-area { flex: 1; padding: 0 1.5rem 5rem; }
+
+.section { display: flex; flex-direction: column; gap: 1.25rem; }
 
 .section-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.25rem;
 }
 
-.section-header .section-title {
-  margin-bottom: 0;
-}
-
-.see-all {
-  font-size: 0.88rem;
+.clear-history-btn {
+  font-size: 0.82rem;
   font-weight: 700;
-  color: var(--accent-2);
-  transition: opacity var(--transition);
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color var(--transition), border-color var(--transition);
 }
+.clear-history-btn:hover { color: var(--text-primary); border-color: var(--border-hover); }
 
-.see-all:hover {
-  opacity: 0.75;
-}
-
-/* ---- Сетка ---- */
+/* ---- Обычные результаты ---- */
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: var(--gap);
 }
 
-.card-skeleton {
-  aspect-ratio: 2 / 3;
-  border-radius: var(--radius-md);
+/* ---- История — большие карточки с кнопкой удаления ---- */
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
 }
 
+.history-card-wrap {
+  position: relative;
+}
+
+/* Кнопка удаления — появляется при наведении на обёртку */
+.delete-card-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  background: rgba(10, 10, 20, 0.8);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+  color: #ef4444;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.history-card-wrap:hover .delete-card-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.delete-card-btn:hover {
+  background: rgba(239, 68, 68, 0.85);
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.card-skeleton { aspect-ratio: 2 / 3; border-radius: var(--radius-md); }
+
+.empty-state,
+.empty-history {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.empty-state span, .empty-history span { font-size: 4rem; }
+.empty-state p, .empty-history p { font-size: 1.05rem; font-weight: 600; }
+.hint { font-size: 0.88rem !important; font-weight: 400 !important; }
+
 @media (max-width: 768px) {
-  .hero {
-    height: 480px;
-  }
-  .movies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
+  .search-hero { padding: 3rem 1rem 2rem; }
+  .brand { font-size: 2rem; }
+  .random-btn { margin-left: 0; margin-top: 0.5rem; }
+  .history-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
 }
 
 @media (max-width: 480px) {
-  .hero {
-    height: 400px;
-  }
-  .movies-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  .history-grid { grid-template-columns: repeat(2, 1fr); }
+  .movies-grid { grid-template-columns: repeat(3, 1fr); }
 }
 </style>
