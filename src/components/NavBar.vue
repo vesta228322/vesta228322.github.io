@@ -16,24 +16,7 @@
           <span class="nav-icon">🔥</span> Популярное
         </RouterLink>
       </nav>
-
-      <!-- Бургер (мобильный) -->
-      <button class="burger" :class="{ open: menuOpen }" @click="menuOpen = !menuOpen">
-        <span></span><span></span><span></span>
-      </button>
     </div>
-
-    <!-- Мобильное выпадающее меню -->
-    <transition name="slide-down">
-      <div v-if="menuOpen" class="mobile-menu glass">
-        <RouterLink to="/" class="mobile-link" @click="menuOpen = false">
-          <span class="mobile-icon">🏠</span> Главная
-        </RouterLink>
-        <RouterLink to="/top" class="mobile-link" @click="menuOpen = false">
-          <span class="mobile-icon">🔥</span> Популярное
-        </RouterLink>
-      </div>
-    </transition>
   </header>
 
   <!-- Мобильная нижняя панель (как в reyohoho) -->
@@ -54,9 +37,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 defineEmits(['random'])
-const menuOpen = ref(false)
 </script>
 
 <style scoped>
@@ -127,64 +108,6 @@ const menuOpen = ref(false)
   font-size: 1rem;
 }
 
-/* Бургер */
-.burger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  padding: 6px;
-  margin-left: auto;
-  transition: transform var(--transition);
-}
-
-.burger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--text-primary);
-  border-radius: 2px;
-  transition: all var(--transition);
-}
-
-.burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-.burger.open span:nth-child(2) { opacity: 0; }
-.burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-/* Мобильное меню */
-.mobile-menu {
-  border-top: 1px solid var(--border);
-  padding: 0.5rem 0;
-}
-
-.mobile-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  transition: color var(--transition), background var(--transition);
-}
-
-.mobile-link:hover {
-  color: var(--text-primary);
-  background: var(--bg-card);
-}
-
-.mobile-icon { font-size: 1.1rem; }
-
-/* Анимация */
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition: all 0.25s ease;
-}
-.slide-down-enter-from,
-.slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
 /* Нижняя панель (мобильная) */
 .bottom-nav {
   display: none;
@@ -192,28 +115,35 @@ const menuOpen = ref(false)
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 64px;
   z-index: 100;
   border-top: 1px solid var(--border);
   justify-content: space-around;
   align-items: center;
   padding: 0 1rem;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .bottom-nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   color: var(--text-muted);
   font-family: inherit;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
+  min-width: 60px;
   border-radius: var(--radius-sm);
-  transition: color var(--transition);
+  transition: color var(--transition), transform 0.2s ease;
   text-decoration: none;
+}
+
+.bottom-nav-item:active {
+  transform: scale(0.9);
 }
 
 .bottom-nav-item:hover,
@@ -221,12 +151,12 @@ const menuOpen = ref(false)
   color: var(--accent-2);
 }
 
-.bottom-icon { font-size: 1.3rem; }
-.bottom-label { font-size: 0.68rem; font-weight: 700; }
+.bottom-icon { font-size: 1.4rem; line-height: 1; }
+.bottom-label { font-size: 0.72rem; font-weight: 700; }
 
 @media (max-width: 768px) {
   .nav-links { display: none; }
-  .burger { display: flex; }
   .bottom-nav { display: flex; }
+  .logo { margin: 0 auto; } /* Центрируем лого на мобилках */
 }
 </style>

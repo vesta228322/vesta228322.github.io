@@ -22,7 +22,7 @@
         >ID Кинопоиск</button>
         <button class="random-btn" :disabled="randomLoading" @click="goRandom">
           <span>🎲</span>
-          {{ randomLoading ? 'Подбираем...' : 'Случайный фильм' }}
+          {{ randomLoading ? 'Подбираем...' : 'Случайный' }}
         </button>
       </div>
 
@@ -117,8 +117,8 @@ const inputRef = ref(null)
 
 const placeholder = computed(() =>
   searchType.value === 'kinopoisk'
-    ? 'Пример: 301 (Матрица), 435 (Бойцовский клуб)'
-    : 'Введите название фильма или сериала...'
+    ? 'Пример: 301, 435'
+    : 'Введите название фильма...'
 )
 
 const loadHistory = () => {
@@ -258,67 +258,61 @@ onMounted(() => {
 .search-tabs {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 780px;
+  overflow-x: auto;
+  padding: 0 10px 10px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+.search-tabs::-webkit-scrollbar { display: none; }
 
 .search-tab {
-  background: none;
-  border: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   color: var(--text-muted);
   font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  padding: 0.4rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  position: relative;
-  transition: color var(--transition);
+  transition: all var(--transition);
 }
 
-.search-tab::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 2px;
-  background: transparent;
-  transition: background var(--transition);
-  border-radius: 2px;
+.search-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 12px var(--accent-glow);
 }
-
-.search-tab.active { color: var(--text-primary); }
-.search-tab.active::after {
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-}
-.search-tab:hover:not(.active) { color: var(--text-secondary); }
 
 .random-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.6rem 1.2rem;
   border-radius: var(--radius-xl);
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
-  margin-left: 1rem;
-  transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
-  box-shadow: 0 4px 16px var(--accent-glow);
+  transition: all var(--transition);
 }
 
 .random-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--accent-glow);
+  border-color: var(--accent-2);
+  color: var(--accent-2);
 }
-
-.random-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 .search-box {
   display: flex;
@@ -347,21 +341,9 @@ onMounted(() => {
   outline: none;
   color: var(--text-primary);
   font-family: inherit;
-  font-size: 1.05rem;
+  font-size: 1rem;
   padding: 0.9rem 0;
 }
-
-.search-box input::placeholder { color: var(--text-muted); }
-
-.clear-btn {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  padding: 4px 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  transition: color var(--transition);
-}
-.clear-btn:hover { color: var(--text-primary); }
 
 /* ---- Контент ---- */
 .content-area { flex: 1; padding: 0 1.5rem 5rem; }
@@ -459,10 +441,10 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .search-hero { padding: 3rem 1rem 2rem; }
-  .brand { font-size: 2rem; }
-  .random-btn { margin-left: 0; margin-top: 0.5rem; }
-  .history-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  .brand { font-size: 2.2rem; }
+  .search-tabs { justify-content: flex-start; }
+  .history-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; }
 }
 
 @media (max-width: 480px) {

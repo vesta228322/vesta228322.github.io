@@ -418,11 +418,21 @@ onMounted(() => load(route.params.id))
 .movie-slogan { color: var(--text-muted); font-style: italic; font-size: 0.9rem; margin-top: -1rem; }
 
 /* Плеер */
-.player-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.player-tabs { 
+  display: flex; 
+  gap: 0.5rem; 
+  margin-bottom: 1.25rem; 
+  overflow-x: auto; 
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+.player-tabs::-webkit-scrollbar { display: none; }
 
 .player-tab {
+  flex-shrink: 0;
+  white-space: nowrap;
   background: var(--bg-card); border: 1px solid var(--border);
-  color: var(--text-secondary); padding: 0.4rem 1.2rem; border-radius: var(--radius-xl);
+  color: var(--text-secondary); padding: 0.5rem 1.2rem; border-radius: var(--radius-xl);
   font-family: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer;
   transition: all var(--transition); display: flex; align-items: center; gap: 0.4rem;
 }
@@ -466,7 +476,7 @@ onMounted(() => load(route.params.id))
 .trailer-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
 
 /* Актёры */
-.cast-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; }
+.cast-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; }
 
 .cast-card {
   background: var(--bg-card); border: 1px solid var(--border);
@@ -483,12 +493,12 @@ onMounted(() => load(route.params.id))
 .cast-photo img { width: 100%; height: 100%; object-fit: cover; }
 .cast-no-photo { font-size: 3rem; color: var(--text-muted); }
 
-.cast-info { padding: 0.6rem; display: flex; flex-direction: column; gap: 2px; }
-.cast-name { font-size: 0.82rem; font-weight: 700; }
-.cast-char { font-size: 0.75rem; color: var(--text-muted); }
+.cast-info { padding: 0.5rem; display: flex; flex-direction: column; gap: 2px; }
+.cast-name { font-size: 0.78rem; font-weight: 700; line-height: 1.2; }
+.cast-char { font-size: 0.7rem; color: var(--text-muted); }
 
 /* Похожие */
-.similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--gap); }
+.similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: var(--gap); }
 
 /* Загрузка */
 .loading-page { min-height: 80vh; display: flex; align-items: center; justify-content: center; }
@@ -502,8 +512,24 @@ onMounted(() => load(route.params.id))
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 900px) {
-  .movie-layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; max-width: 240px; }
-  .backdrop, .backdrop-overlay { position: absolute; }
+  .movie-page { padding: 1.5rem 0 4rem; }
+  .movie-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+  .sidebar { 
+    order: 2; /* Постер после заголовка */
+    flex-direction: row; 
+    align-items: center; 
+    gap: 1.5rem;
+    max-width: none;
+  }
+  .poster-box { width: 120px; flex-shrink: 0; }
+  .score-box { flex: 1; align-items: flex-start; padding: 0.75rem 1rem; }
+  .score-row { align-items: flex-start; }
+  .score-num { font-size: 1.6rem; }
+  .movie-header { order: 1; }
+  .player-section { order: 3; }
+  .cast-section { order: 4; }
+  .similar-section { order: 5; }
+  .movie-title { font-size: 1.8rem; }
+  .backdrop, .backdrop-overlay { position: fixed; }
 }
 </style>
