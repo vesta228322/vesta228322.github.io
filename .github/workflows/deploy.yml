@@ -28,7 +28,8 @@ jobs:
         run: npm run build
         env:
           VITE_TMDB_KEY: ${{ secrets.VITE_TMDB_KEY }}
-          VITE_KODIK_TOKEN: ${{ secrets.VITE_KODIK_TOKEN }}
+          VITE_KP_KEY: ${{ secrets.VITE_KP_KEY }}
+          VITE_ALLOHA_TOKEN: ${{ secrets.VITE_ALLOHA_TOKEN }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
