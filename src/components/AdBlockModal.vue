@@ -30,15 +30,8 @@
         </div>
 
         <div class="modal-footer">
-          <a 
-            href="https://chromewebstore.google.com/detail/ublock/epcnnfbjfcgphgdmggkamkmgojdagdnn" 
-            target="_blank" 
-            class="install-btn"
-          >
-            🚀 Установить uBlock
-          </a>
-          <button class="maybe-later" @click="$emit('update:modelValue', false)">
-            Позже
+          <button class="install-btn" @click="$emit('update:modelValue', false)">
+            Понятно, спасибо
           </button>
         </div>
       </div>
