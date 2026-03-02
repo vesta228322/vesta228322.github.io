@@ -5,7 +5,7 @@
         <button class="close-top" @click="$emit('update:modelValue', false)">✕</button>
         
         <div class="modal-header">
-          <span class="warning-icon">📢</span>
+          <Megaphone class="warning-icon" :size="48" />
           <h2>Важное уведомление</h2>
         </div>
 
@@ -15,15 +15,15 @@
           
           <div class="benefit-list">
             <div class="benefit-item">
-              <span>✅</span>
+              <CheckCircle2 :size="18" class="check-icon" />
               <span>Никаких всплывающих окон</span>
             </div>
             <div class="benefit-item">
-              <span>✅</span>
+              <CheckCircle2 :size="18" class="check-icon" />
               <span>Быстрая загрузка плеера</span>
             </div>
             <div class="benefit-item">
-              <span>✅</span>
+              <CheckCircle2 :size="18" class="check-icon" />
               <span>Абсолютно бесплатно и безопасно</span>
             </div>
           </div>
@@ -40,6 +40,7 @@
 </template>
 
 <script setup>
+import { Megaphone, CheckCircle2 } from 'lucide-vue-next'
 defineProps({
   modelValue: Boolean
 })
@@ -89,9 +90,15 @@ defineEmits(['update:modelValue'])
 }
 
 .warning-icon {
-  font-size: 3rem;
+  color: var(--accent);
   display: block;
-  margin-bottom: 0.5rem;
+  margin: 0 auto 0.5rem;
+  filter: drop-shadow(0 0 10px var(--accent-glow));
+}
+
+.check-icon {
+  color: #22c55e;
+  flex-shrink: 0;
 }
 
 .modal-header h2 {

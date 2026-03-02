@@ -10,10 +10,10 @@
       <!-- Десктопная навигация -->
       <nav class="nav-links">
         <RouterLink to="/" class="nav-link" exact-active-class="nav-link--active">
-          <span class="nav-icon">🏠</span> Главная
+          <House :size="18" /> Главная
         </RouterLink>
         <RouterLink to="/top" class="nav-link" active-class="nav-link--active">
-          <span class="nav-icon">🔥</span> Популярное
+          <Flame :size="18" /> Популярное
         </RouterLink>
       </nav>
     </div>
@@ -22,21 +22,22 @@
   <!-- Мобильная нижняя панель (как в reyohoho) -->
   <nav class="bottom-nav glass">
     <RouterLink to="/" class="bottom-nav-item" exact-active-class="bottom-nav-item--active">
-      <span class="bottom-icon">🏠</span>
+      <House :size="24" />
       <span class="bottom-label">Главная</span>
     </RouterLink>
     <RouterLink to="/top" class="bottom-nav-item" active-class="bottom-nav-item--active">
-      <span class="bottom-icon">🔥</span>
+      <Flame :size="24" />
       <span class="bottom-label">Топ</span>
     </RouterLink>
     <button class="bottom-nav-item" @click="$emit('random')">
-      <span class="bottom-icon">🎲</span>
+      <Dices :size="24" />
       <span class="bottom-label">Случайный</span>
     </button>
   </nav>
 </template>
 
 <script setup>
+import { House, Flame, Dices } from 'lucide-vue-next'
 defineEmits(['random'])
 </script>
 

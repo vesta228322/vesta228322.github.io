@@ -10,18 +10,21 @@
         @error="onImgError"
       />
       <div v-else class="no-poster">
-        <span>🎬</span>
+        <Clapperboard :size="40" />
         <p>Нет постера</p>
       </div>
 
       <!-- Рейтинг -->
       <div v-if="movie.vote_average" class="rating-badge" :class="ratingClass">
-        ★ {{ movie.vote_average.toFixed(1) }}
+        <Star :size="12" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-top: -2px;" /> {{ movie.vote_average.toFixed(1) }}
       </div>
 
       <!-- Оверлей при наведении -->
       <div class="hover-overlay">
-        <span class="play-btn">▶ Смотреть</span>
+        <span class="play-btn">
+          <Play :size="16" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-top: -2px; margin-right: 4px;" />
+          Смотреть
+        </span>
       </div>
     </div>
 
@@ -35,6 +38,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { Star, Play, Clapperboard } from 'lucide-vue-next'
 
 const TMDB_IMG = "https://image.tmdb.org/t/p/w342";
 

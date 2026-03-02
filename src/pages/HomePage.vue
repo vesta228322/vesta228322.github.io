@@ -4,11 +4,11 @@
     <div class="search-hero" :class="{ compact: history.length > 0 || searched }">
       <!-- Кнопка инфо/важно -->
       <button class="info-alert-btn" @click="openAdBlockModal" title="Важная информация">
-        <span>📢</span> Важно!
+        <Megaphone :size="16" /> Важно!
       </button>
 
       <div class="brand">
-        <span class="brand-icon">▶</span>
+        <Play class="brand-icon" fill="currentColor" />
         <h1 class="brand-name">Kino<span class="gradient-text">Flow</span></h1>
       </div>
       <p class="brand-sub">Смотри фильмы и сериалы онлайн</p>
@@ -26,14 +26,14 @@
           @click="setType('kinopoisk')"
         >ID Кинопоиск</button>
         <button class="random-btn" :disabled="randomLoading" @click="goRandom">
-          <span>🎲</span>
+          <Dices :size="18" />
           {{ randomLoading ? 'Подбираем...' : 'Случайный' }}
         </button>
       </nav>
 
       <!-- Поисковая строка -->
       <div class="search-box" :class="{ focused }">
-        <span class="search-ico" aria-hidden="true">⌕</span>
+        <Search class="search-ico" :size="20" aria-hidden="true" />
         <input
           ref="inputRef"
           v-model="query"
@@ -58,13 +58,13 @@
       <!-- Результаты поиска -->
       <template v-else-if="searched">
         <h2 class="section-title" v-if="movies.length">
-          Результаты поиска <span>🔍</span>
+          Результаты поиска <Search :size="18" style="display: inline-block; vertical-align: middle; margin-left: 4px;" />
         </h2>
         <div v-if="movies.length" class="movies-grid fade-in">
           <MovieCard v-for="m in movies" :key="m.id" :movie="m" />
         </div>
         <div v-else class="empty-state fade-in">
-          <span>🎬</span>
+          <Clapperboard :size="48" class="empty-icon" />
           <p>Ничего не найдено. Попробуй другое название.</p>
         </div>
       </template>
@@ -73,7 +73,7 @@
       <template v-else>
         <div v-if="history.length" class="section fade-in">
           <div class="section-header">
-            <h2 class="section-title">История просмотра <span>🕐</span></h2>
+            <h2 class="section-title">История просмотра <History :size="18" style="display: inline-block; vertical-align: middle; margin-left: 4px;" /></h2>
             <button class="clear-history-btn" @click="clearHistory">Очистить всё</button>
           </div>
           <!-- Карточки истории с кнопкой удаления -->
@@ -89,12 +89,14 @@
                 class="delete-card-btn"
                 title="Удалить из истории"
                 @click.prevent.stop="deleteFromHistory(m.id)"
-              >🗑</button>
+              >
+                <Trash2 :size="16" />
+              </button>
             </div>
           </div>
         </div>
         <div v-else class="empty-history fade-in">
-          <span>🎬</span>
+          <Clapperboard :size="48" class="empty-icon" />
           <p>Твоя история просмотров появится здесь</p>
           <p class="hint">Начни поиск фильма выше</p>
         </div>
@@ -106,6 +108,15 @@
 <script setup>
 import { ref, computed, onMounted, watch, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { 
+  Search, 
+  History, 
+  Trash2, 
+  Clapperboard, 
+  Play, 
+  Megaphone, 
+  Dices 
+} from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import { searchKP, getKPTop } from '@/api/kp'
 
@@ -511,7 +522,7 @@ watch(
   gap: 0.75rem;
 }
 
-.empty-state span, .empty-history span { font-size: 4rem; }
+.empty-state .empty-icon, .empty-history .empty-icon { color: var(--text-muted); opacity: 0.5; }
 .empty-state p, .empty-history p { font-size: 1.05rem; font-weight: 600; }
 .hint { font-size: 0.88rem !important; font-weight: 400 !important; }
 
