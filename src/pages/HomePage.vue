@@ -1,15 +1,15 @@
 <template>
-  <div class="home">
+  <main class="home">
     <!-- Центральный блок -->
     <div class="search-hero">
       <div class="brand">
         <span class="brand-icon">▶</span>
-        <span class="brand-name">Kino<span class="gradient-text">Flow</span></span>
+        <h1 class="brand-name">Kino<span class="gradient-text">Flow</span></h1>
       </div>
       <p class="brand-sub">Смотри фильмы и сериалы онлайн</p>
 
       <!-- Табы типа поиска -->
-      <div class="search-tabs">
+      <nav class="search-tabs">
         <button
           class="search-tab"
           :class="{ active: searchType === 'title' }"
@@ -24,11 +24,11 @@
           <span>🎲</span>
           {{ randomLoading ? 'Подбираем...' : 'Случайный' }}
         </button>
-      </div>
+      </nav>
 
       <!-- Поисковая строка -->
       <div class="search-box" :class="{ focused }">
-        <span class="search-ico">⌕</span>
+        <span class="search-ico" aria-hidden="true">⌕</span>
         <input
           ref="inputRef"
           v-model="query"
@@ -38,8 +38,9 @@
           @blur="focused = false"
           @keydown.enter="handleEnter"
           @input="handleInput"
+          aria-label="Поиск фильмов"
         />
-        <button v-if="query" class="clear-btn" @click="clearSearch">✕</button>
+        <button v-if="query" class="clear-btn" @click="clearSearch" aria-label="Очистить поиск">✕</button>
       </div>
     </div>
 
@@ -94,7 +95,7 @@
         </div>
       </template>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup>

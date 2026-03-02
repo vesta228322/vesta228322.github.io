@@ -5,7 +5,7 @@
       <img
         v-if="posterUrl"
         :src="posterUrl"
-        :alt="movie.title || movie.name"
+        :alt="`Постер фильма ${movie.title || movie.name}`"
         loading="lazy"
         @error="onImgError"
       />
@@ -27,7 +27,7 @@
 
     <!-- Информация -->
     <div class="card-info">
-      <h3 class="card-title">{{ movie.title || movie.name }}</h3>
+      <h2 class="card-title">{{ movie.title || movie.name }}</h2>
       <span class="card-year">{{ releaseYear }}</span>
     </div>
   </RouterLink>
