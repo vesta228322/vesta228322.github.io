@@ -2,7 +2,9 @@
   <div class="top-page">
     <div class="container">
       <div class="page-header fade-in">
-        <h1 class="section-title">Популярное <span>🔥</span></h1>
+        <h1 class="section-title">
+          Популярное <Flame :size="24" style="display: inline-block; vertical-align: middle; margin-top: -4px;" />
+        </h1>
         <p class="page-sub">Самые популярные фильмы прямо сейчас</p>
       </div>
 
@@ -14,6 +16,7 @@
           :class="{ active: activeTab === t.id }"
           @click="switchTab(t.id)"
         >
+          <component :is="t.icon" :size="16" />
           {{ t.label }}
         </button>
       </div>
@@ -36,7 +39,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, markRaw } from 'vue'
+import { Flame, Star, Tv } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import { getKPTop } from '@/api/kp'
 import axios from 'axios'
@@ -44,9 +48,9 @@ import axios from 'axios'
 const API_KEY = import.meta.env.VITE_KP_KEY || ''
 
 const tabs = [
-  { id: 'popular', label: '🔥 Популярные' },
-  { id: 'top250', label: '⭐ Топ 250' },
-  { id: 'series', label: '📺 Сериалы' },
+  { id: 'popular', label: 'Популярные', icon: markRaw(Flame) },
+  { id: 'top250', label: 'Топ 250', icon: markRaw(Star) },
+  { id: 'series', label: 'Сериалы', icon: markRaw(Tv) },
 ]
 
 const activeTab = ref('popular')
@@ -131,6 +135,9 @@ onMounted(load)
 }
 
 .tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   background: var(--bg-card);
   border: 1px solid var(--border);
   color: var(--text-secondary);

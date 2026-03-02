@@ -4,9 +4,9 @@
       <div class="search-header fade-in">
         <h1 class="section-title">
           <span v-if="query">Результаты: «{{ query }}»</span>
-          <span v-else-if="route.query.sort === 'top'">⭐ Топ по рейтингу</span>
-          <span v-else-if="route.query.genre">🎬 По жанру</span>
-          <span v-else>🔍 Поиск</span>
+          <span v-else-if="route.query.sort === 'top'"><Star :size="20" class="title-icon" /> Топ по рейтингу</span>
+          <span v-else-if="route.query.genre"><Clapperboard :size="20" class="title-icon" /> По жанру</span>
+          <span v-else><Search :size="20" class="title-icon" /> Поиск</span>
         </h1>
         <p v-if="total" class="results-count">Найдено: {{ total }} фильмов</p>
       </div>
@@ -34,7 +34,7 @@
 
       <!-- Пусто -->
       <div v-else class="empty-state fade-in">
-        <span>🎬</span>
+        <Clapperboard :size="48" class="empty-icon" />
         <p>Ничего не найдено. Попробуй другое название.</p>
       </div>
 
@@ -65,6 +65,7 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { Search, Star, Clapperboard } from 'lucide-vue-next'
 import MovieCard from "@/components/MovieCard.vue";
 import { searchMovies, getPopular, getTopRated, getByGenre } from "@/api/tmdb";
 
@@ -191,10 +192,17 @@ onMounted(load);
   color: var(--text-muted);
 }
 
-.empty-state span {
-  font-size: 4rem;
-  display: block;
+.empty-state .empty-icon {
+  color: var(--text-muted);
+  opacity: 0.5;
   margin-bottom: 1rem;
+}
+
+.title-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -4px;
+  margin-right: 4px;
 }
 
 .pagination {

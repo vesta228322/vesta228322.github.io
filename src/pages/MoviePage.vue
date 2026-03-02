@@ -9,7 +9,9 @@
       <aside class="sidebar">
         <div class="poster-box">
           <img v-if="posterUrl" :src="posterUrl" :alt="movie.nameRu || movie.nameEn" />
-          <div v-else class="no-poster-big">🎬</div>
+          <div v-else class="no-poster-big">
+            <Clapperboard :size="64" />
+          </div>
         </div>
         <div class="score-box">
           <div v-if="alloha?.rating_kp" class="score-row">
@@ -49,9 +51,9 @@
           </p>
 
           <div class="movie-meta">
-            <span v-if="movie.year">📅 {{ movie.year }}</span>
-            <span v-if="movie.filmLength">⏱ {{ movie.filmLength }}</span>
-            <span v-if="movie.countries?.[0]">🌍 {{ movie.countries[0].country }}</span>
+            <span v-if="movie.year"><Calendar :size="16" class="meta-icon" /> {{ movie.year }}</span>
+            <span v-if="movie.filmLength"><Clock :size="16" class="meta-icon" /> {{ movie.filmLength }} мин</span>
+            <span v-if="movie.countries?.[0]"><Globe :size="16" class="meta-icon" /> {{ movie.countries[0].country }}</span>
             <span v-if="alloha?.quality" class="quality-badge">{{ alloha.quality }}</span>
           </div>
 
@@ -64,7 +66,7 @@
 
         <!-- Плеер -->
         <div class="player-section">
-          <h2 class="section-title">Плеер <span>▶</span></h2>
+          <h2 class="section-title">Плеер <Play :size="18" fill="currentColor" class="title-icon" /></h2>
 
           <!-- Загрузка -->
           <div v-if="allohaLoading" class="player-placeholder">
@@ -86,7 +88,7 @@
 
           <!-- Нет плеера -->
           <div v-else class="player-placeholder">
-            <div class="placeholder-icon">▶</div>
+            <Play :size="48" class="placeholder-icon" />
             <h3>Плеер недоступен</h3>
             <p>Фильм не найден в базе плеера. Попробуй позже.</p>
           </div>
@@ -94,7 +96,8 @@
           <!-- Трейлер -->
           <div v-if="alloha?.iframe_trailer && !allohaLoading" class="trailer-section">
             <button class="trailer-btn" @click="showTrailer = !showTrailer">
-              {{ showTrailer ? '✕ Закрыть трейлер' : '🎬 Трейлер' }}
+              <component :is="showTrailer ? X : Clapperboard" :size="16" />
+              {{ showTrailer ? 'Закрыть трейлер' : 'Трейлер' }}
             </button>
             <div v-if="showTrailer" class="player-wrap" style="margin-top: 1rem;">
               <iframe
@@ -109,12 +112,12 @@
 
         <!-- Актёры -->
         <div class="cast-section" v-if="cast.length">
-          <h2 class="section-title">В ролях <span>🎭</span></h2>
+          <h2 class="section-title">В ролях <Users :size="20" class="title-icon" /></h2>
           <div class="cast-grid">
             <div v-for="actor in cast" :key="actor.staffId" class="cast-card">
               <div class="cast-photo">
                 <img v-if="actor.posterUrl" :src="actor.posterUrl" :alt="actor.nameRu" />
-                <span v-else class="cast-no-photo">👤</span>
+                <User v-else :size="48" class="cast-no-photo" />
               </div>
               <div class="cast-info">
                 <span class="cast-name">{{ actor.nameRu || actor.nameEn }}</span>
@@ -126,7 +129,7 @@
 
         <!-- Похожие -->
         <div class="similar-section" v-if="similar.length">
-          <h2 class="section-title">Похожие <span>🎬</span></h2>
+          <h2 class="section-title">Похожие <Clapperboard :size="18" class="title-icon" /></h2>
           <div class="similar-grid">
             <MovieCard v-for="m in similar" :key="m.id" :movie="m" />
           </div>
@@ -144,6 +147,16 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { 
+  Calendar, 
+  Clock, 
+  Globe, 
+  Play, 
+  Users, 
+  User, 
+  Clapperboard, 
+  X 
+} from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import { getKPFilm, getKPStaff, getKPSimilars } from '@/api/kp'
 import { getAllohaByKp } from '@/api/alloha'
@@ -402,10 +415,28 @@ onMounted(() => load(route.params.id))
 .trailer-section { margin-top: 1rem; }
 
 .trailer-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary);
   padding: 0.5rem 1.2rem; border-radius: var(--radius-xl);
   font-family: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer;
   transition: all var(--transition);
+}
+
+.title-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -4px;
+  margin-left: 4px;
+}
+
+.meta-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -2px;
+  margin-right: 4px;
+  opacity: 0.8;
 }
 
 .trailer-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
