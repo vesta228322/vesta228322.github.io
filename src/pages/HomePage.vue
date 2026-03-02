@@ -74,7 +74,10 @@
         <div v-if="history.length" class="section fade-in">
           <div class="section-header">
             <h2 class="section-title">История просмотра <History :size="18" style="display: inline-block; vertical-align: middle; margin-left: 4px;" /></h2>
-            <button class="clear-history-btn" @click="clearHistory">Очистить всё</button>
+            <button class="clear-history-btn" @click="clearHistory">
+              <Trash2 :size="14" />
+              <span class="btn-text">Очистить всё</span>
+            </button>
           </div>
           <!-- Карточки истории с кнопкой удаления -->
           <div class="history-grid">
@@ -444,18 +447,42 @@ watch(
 }
 
 .clear-history-btn {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  background: none;
-  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: var(--radius-sm);
-  padding: 0.3rem 0.8rem;
+  padding: 0.4rem 0.75rem;
   cursor: pointer;
   font-family: inherit;
-  transition: color var(--transition), border-color var(--transition);
+  transition: all var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.clear-history-btn:hover { color: var(--text-primary); border-color: var(--border-hover); }
+.clear-history-btn:hover { 
+  background: #ef4444; 
+  color: #fff; 
+  border-color: #ef4444; 
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+@media (max-width: 480px) {
+  .clear-history-btn {
+    padding: 0.5rem;
+    font-size: 0.7rem;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+  .clear-history-btn .btn-text {
+    display: none;
+  }
+}
 
 /* ---- Обычные результаты ---- */
 .movies-grid {
