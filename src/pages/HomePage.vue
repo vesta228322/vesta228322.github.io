@@ -460,19 +460,21 @@ watch(
 /* ---- Обычные результаты ---- */
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: var(--gap);
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
 }
 
-/* ---- История — большие карточки с кнопкой удаления ---- */
+/* ---- История — такие же карточки как в поиске ---- */
 .history-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1.5rem;
 }
 
 .history-card-wrap {
   position: relative;
+  min-width: 0;
+  width: 100%;
 }
 
 /* Кнопка удаления — появляется при наведении на обёртку */
@@ -530,12 +532,16 @@ watch(
   .search-hero { padding: 3rem 1rem 2rem; }
   .brand { font-size: 2.2rem; }
   .search-tabs { justify-content: flex-start; }
-  .history-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
-  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+  .history-grid, .movies-grid { 
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+    gap: 1rem; 
+  }
 }
 
 @media (max-width: 480px) {
-  .history-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-  .movies-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .history-grid, .movies-grid { 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 0.75rem; 
+  }
 }
 </style>

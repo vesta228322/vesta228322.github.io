@@ -81,6 +81,8 @@ const onImgError = (e) => {
   cursor: pointer;
   text-decoration: none;
   color: inherit;
+  width: 100%;
+  min-width: 0;
 }
 
 .poster-wrap {
@@ -88,11 +90,10 @@ const onImgError = (e) => {
   border-radius: var(--radius-md);
   overflow: hidden;
   aspect-ratio: 2 / 3;
+  width: 100%;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
 .movie-card:hover .poster-wrap {
@@ -101,12 +102,18 @@ const onImgError = (e) => {
 }
 
 .poster-wrap img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .no-poster {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -116,6 +123,7 @@ const onImgError = (e) => {
   gap: 0.5rem;
   color: var(--text-muted);
   font-size: 0.85rem;
+  background: var(--bg-card);
 }
 
 .no-poster span {
