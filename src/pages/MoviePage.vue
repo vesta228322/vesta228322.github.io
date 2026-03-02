@@ -277,6 +277,7 @@ const load = async (id) => {
     // Сохраняем в историю если данные загрузились
     if (movie.value) {
       saveToHistory(movie.value, alloha.value)
+      document.title = `KinoFlow — ${movie.value.nameRu || movie.value.nameEn || 'Фильм'}`
     }
   } catch (e) {
     console.error('Ошибка загрузки фильма:', e)
