@@ -78,7 +78,6 @@
               <iframe
                 :src="alloha.iframe"
                 frameborder="0"
-                allowfullscreen
                 allow="autoplay; fullscreen"
                 sandbox="allow-forms allow-scripts allow-pointer-lock allow-same-origin allow-top-navigation"
               ></iframe>
@@ -101,7 +100,6 @@
               <iframe
                 :src="alloha.iframe_trailer"
                 frameborder="0"
-                allowfullscreen
                 allow="autoplay; fullscreen"
                 sandbox="allow-forms allow-scripts allow-pointer-lock allow-same-origin allow-top-navigation"
               ></iframe>
