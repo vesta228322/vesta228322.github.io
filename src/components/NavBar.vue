@@ -3,7 +3,7 @@
     <div class="container navbar-inner">
       <!-- Логотип -->
       <RouterLink to="/" class="logo">
-        <span class="logo-icon">▶</span>
+        <Play :size="20" class="logo-icon" fill="currentColor" />
         <span class="logo-text">Kino<span class="gradient-text">Flow</span></span>
       </RouterLink>
 
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { House, Flame, Dices } from 'lucide-vue-next'
+import { House, Flame, Dices, Play } from 'lucide-vue-next'
 defineEmits(['random'])
 </script>
 
