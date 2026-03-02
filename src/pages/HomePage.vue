@@ -99,12 +99,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import MovieCard from '@/components/MovieCard.vue'
 import { searchKP, getKPTop } from '@/api/kp'
 
 const router = useRouter()
+const route = useRoute()
 
 const searchType = ref('title')
 const query = ref('')
@@ -216,6 +217,16 @@ onMounted(() => {
   loadHistory()
   inputRef.value?.focus()
 })
+
+// Перезагружаем историю при каждом возврате на главную
+watch(
+  () => route.path,
+  (path) => {
+    if (path === '/' || path === '/kinoflow/' || path === '/kinoflow') {
+      loadHistory()
+    }
+  }
+)
 </script>
 
 <style scoped>

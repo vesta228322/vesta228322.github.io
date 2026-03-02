@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const TOKEN = import.meta.env.VITE_ALLOHA_TOKEN || ''
-const BASE = 'https://api.alloha.tv'
+const BASE = 'https://api.apbugall.org'
 
 /**
  * Получить данные плеера Alloha по TMDB ID

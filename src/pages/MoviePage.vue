@@ -72,32 +72,7 @@
             <p>Загружаем плеер...</p>
           </div>
 
-          <!-- Выбор озвучки -->
-          <template v-else-if="translations.length">
-            <div class="player-tabs">
-              <button
-                v-for="t in translations"
-                :key="t.id"
-                class="player-tab"
-                :class="{ active: activeTranslation === t.id }"
-                @click="activeTranslation = t.id"
-              >
-                {{ t.name }}
-                <span v-if="t.uhd" class="uhd-badge">4K</span>
-              </button>
-            </div>
-
-            <div class="player-wrap">
-              <iframe
-                :src="activeIframe"
-                frameborder="0"
-                allowfullscreen
-                allow="autoplay; fullscreen"
-              ></iframe>
-            </div>
-          </template>
-
-          <!-- Плеер без вкладок озвучек -->
+          <!-- Плеер -->
           <template v-else-if="alloha?.iframe">
             <div class="player-wrap">
               <iframe
@@ -179,25 +154,7 @@ const cast = ref([])
 const similar = ref([])
 const alloha = ref(null)
 const allohaLoading = ref(false)
-const activeTranslation = ref('')
 const showTrailer = ref(false)
-
-// Озвучки из Alloha
-const translations = computed(() => {
-  if (!alloha.value?.translation_iframe) return []
-  return Object.entries(alloha.value.translation_iframe).map(([id, t]) => ({
-    id,
-    name: t.name,
-    iframe: t.iframe,
-    quality: t.quality,
-    uhd: t.uhd,
-  }))
-})
-
-const activeIframe = computed(() => {
-  if (!activeTranslation.value || !alloha.value) return null
-  return alloha.value.translation_iframe?.[activeTranslation.value]?.iframe || null
-})
 
 const posterUrl = computed(() => {
   // Приоритет: Alloha постер (kitnopoisk CDN) → KP API постер
@@ -238,7 +195,6 @@ const load = async (id) => {
   cast.value = []
   similar.value = []
   showTrailer.value = false
-  activeTranslation.value = ''
 
   // Загружаем данные о фильме из KP + Alloha параллельно
   allohaLoading.value = true
@@ -256,12 +212,6 @@ const load = async (id) => {
 
     if (allohaData.status === 'fulfilled') {
       alloha.value = allohaData.value
-      // Выбираем дублированную озвучку по умолчанию
-      const trans = Object.entries(allohaData.value.translation_iframe || {})
-      if (trans.length) {
-        const dubbed = trans.find(([, t]) => t.name.toLowerCase().includes('дубл'))
-        activeTranslation.value = dubbed ? dubbed[0] : trans[0][0]
-      }
     } else {
       console.warn('Alloha:', allohaData.reason?.message)
     }
@@ -416,46 +366,30 @@ onMounted(() => load(route.params.id))
 }
 
 .movie-overview { color: var(--text-secondary); line-height: 1.8; font-size: 0.97rem; }
-.movie-slogan { color: var(--text-muted); font-style: italic; font-size: 0.9rem; margin-top: -1rem; }
+.movie-slogan { color: var(--text-muted); font-style: italic; font-size: 0.9rem; margin-top: 1rem; }
 
-/* Плеер */
-.player-tabs { 
-  display: flex; 
-  gap: 0.5rem; 
-  margin-bottom: 1.25rem; 
-  overflow-x: auto; 
-  padding-bottom: 8px;
-  scrollbar-width: none;
-}
-.player-tabs::-webkit-scrollbar { display: none; }
 
-.player-tab {
-  flex-shrink: 0;
-  white-space: nowrap;
-  background: var(--bg-card); border: 1px solid var(--border);
-  color: var(--text-secondary); padding: 0.5rem 1.2rem; border-radius: var(--radius-xl);
-  font-family: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer;
-  transition: all var(--transition); display: flex; align-items: center; gap: 0.4rem;
-}
-
-.player-tab.active, .player-tab:hover {
-  background: var(--accent); border-color: var(--accent);
-  color: #fff; box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-.uhd-badge {
-  background: rgba(255,255,255,0.2); padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;
-}
 
 .player-wrap {
-  width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-lg);
-  overflow: hidden; border: 1px solid var(--border); background: #000; box-shadow: var(--shadow-card);
+  width: 100%; 
+  max-width: 900px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9; 
+  border-radius: var(--radius-lg);
+  overflow: hidden; 
+  border: 1px solid var(--border); 
+  background: #000; 
+  box-shadow: var(--shadow-card);
 }
 
 .player-wrap iframe { width: 100%; height: 100%; border: none; }
 
 .player-placeholder {
-  width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-lg);
+  width: 100%; 
+  max-width: 900px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9; 
+  border-radius: var(--radius-lg);
   border: 2px dashed var(--border-hover); display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 0.75rem;
   color: var(--text-muted); text-align: center; background: var(--bg-card); padding: 2rem;
