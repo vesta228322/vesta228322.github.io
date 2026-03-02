@@ -80,6 +80,7 @@
                 frameborder="0"
                 allowfullscreen
                 allow="autoplay; fullscreen"
+                sandbox="allow-forms allow-scripts allow-pointer-lock allow-same-origin allow-top-navigation"
               ></iframe>
             </div>
           </template>
@@ -102,6 +103,7 @@
                 frameborder="0"
                 allowfullscreen
                 allow="autoplay; fullscreen"
+                sandbox="allow-forms allow-scripts allow-pointer-lock allow-same-origin allow-top-navigation"
               ></iframe>
             </div>
           </div>
