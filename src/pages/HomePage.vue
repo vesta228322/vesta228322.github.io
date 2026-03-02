@@ -1,7 +1,7 @@
 <template>
   <main class="home">
     <!-- Центральный блок -->
-    <div class="search-hero">
+    <div class="search-hero" :class="{ compact: history.length > 0 || searched }">
       <div class="brand">
         <span class="brand-icon">▶</span>
         <h1 class="brand-name">Kino<span class="gradient-text">Flow</span></h1>
@@ -243,6 +243,7 @@ watch(
   align-items: center;
   padding: 4rem 1.5rem 2.5rem;
   text-align: center;
+  transition: all var(--transition);
 }
 
 .brand {
@@ -253,6 +254,7 @@ watch(
   font-weight: 900;
   letter-spacing: -2px;
   margin-bottom: 0.4rem;
+  transition: all var(--transition);
 }
 
 .brand-icon {
@@ -265,6 +267,23 @@ watch(
   color: var(--text-muted);
   font-size: 1rem;
   margin-bottom: 2rem;
+  transition: all var(--transition);
+}
+
+/* Компактный режим при наличии истории или поиске */
+.search-hero.compact {
+  padding: 2rem 1.5rem 1.3rem;
+}
+.search-hero.compact .brand {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+}
+.search-hero.compact .brand-icon {
+  font-size: 1.4rem;
+}
+.search-hero.compact .brand-sub {
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
 }
 
 .search-tabs {
