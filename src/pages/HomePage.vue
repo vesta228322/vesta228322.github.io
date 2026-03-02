@@ -2,6 +2,11 @@
   <main class="home">
     <!-- Центральный блок -->
     <div class="search-hero" :class="{ compact: history.length > 0 || searched }">
+      <!-- Кнопка инфо/важно -->
+      <button class="info-alert-btn" @click="openAdBlockModal" title="Важная информация">
+        <span>📢</span> Важно!
+      </button>
+
       <div class="brand">
         <span class="brand-icon">▶</span>
         <h1 class="brand-name">Kino<span class="gradient-text">Flow</span></h1>
@@ -99,10 +104,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MovieCard from '@/components/MovieCard.vue'
 import { searchKP, getKPTop } from '@/api/kp'
+
+const openAdBlockModal = inject('openAdBlockModal')
 
 const router = useRouter()
 const route = useRoute()
@@ -244,6 +251,44 @@ watch(
   padding: 4rem 1.5rem 2.5rem;
   text-align: center;
   transition: all var(--transition);
+  position: relative;
+}
+
+.info-alert-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  color: #ff9800;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-xl);
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition);
+  z-index: 10;
+}
+
+.info-alert-btn:hover {
+  background: #ff9800;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.info-alert-btn span { font-size: 1.1rem; }
+
+@media (max-width: 768px) {
+  .info-alert-btn {
+    top: 0.75rem;
+    right: 1rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.75rem;
+  }
 }
 
 .brand {

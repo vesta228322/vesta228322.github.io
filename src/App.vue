@@ -3,16 +3,27 @@
   <main class="main-layout">
     <RouterView />
   </main>
+
+  <!-- Модалка рекомендации блокировщика -->
+  <AdBlockModal v-model="showAdBlock" />
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
+import AdBlockModal from '@/components/AdBlockModal.vue'
 import { getKPTop } from '@/api/kp'
 
 const router = useRouter()
 const randomLoading = ref(false)
+const showAdBlock = ref(false)
+
+// Предоставляем метод открытия модалки глобально
+const openAdBlockModal = () => {
+  showAdBlock.value = true
+}
+provide('openAdBlockModal', openAdBlockModal)
 
 const goRandom = async () => {
   if (randomLoading.value) return
