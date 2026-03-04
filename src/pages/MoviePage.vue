@@ -179,12 +179,36 @@ const showTrailer = ref(false)
 const shareCopied = ref(false)
 
 const shareMovie = async () => {
+  const url = window.location.href
+
+  // Простая проверка на мобильное устройство
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+  // Пробуем нативный шаринг только на мобилках
+  if (isMobile && navigator.share) {
+    const title = movie.value.nameRu || movie.value.nameEn || 'Смотреть онлайн'
+    const text = `Фильм "${title}" — смотри бесплатно на KinoFlow!`
+    
+    try {
+      await navigator.share({ title, text, url })
+      return // Если успешно поделились через шторку, выходим
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.error('Ошибка шаринга:', err)
+        fallbackCopy(url) // Если ошибка шаринга, копируем
+      }
+    }
+  } else {
+    // Десктоп или нет поддержки Web Share — старый добрый буфер обмена
+    fallbackCopy(url)
+  }
+}
+
+const fallbackCopy = async (url) => {
   try {
-    await navigator.clipboard.writeText(window.location.href)
+    await navigator.clipboard.writeText(url)
     shareCopied.value = true
-    setTimeout(() => {
-      shareCopied.value = false
-    }, 2000)
+    setTimeout(() => { shareCopied.value = false }, 2000)
   } catch (err) {
     console.error('Failed to copy text: ', err)
   }
