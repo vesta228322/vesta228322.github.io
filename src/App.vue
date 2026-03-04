@@ -17,7 +17,7 @@ import { useRouter } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import AdBlockModal from '@/components/AdBlockModal.vue'
 import ScrollToTop from '@/components/ScrollToTop.vue'
-import { getKPTop } from '@/api/kp'
+import { getRandomKPFilm } from '@/api/kp'
 
 const router = useRouter()
 const randomLoading = ref(false)
@@ -33,11 +33,8 @@ const goRandom = async () => {
   if (randomLoading.value) return
   randomLoading.value = true
   try {
-    const page = Math.floor(Math.random() * 5) + 1
-    const films = await getKPTop(page)
-    const filtered = films.filter((f) => f.posterUrl)
-    if (filtered.length) {
-      const movie = filtered[Math.floor(Math.random() * filtered.length)]
+    const movie = await getRandomKPFilm()
+    if (movie) {
       router.push(`/movie/${movie.id}`)
     }
   } catch (e) {

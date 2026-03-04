@@ -48,13 +48,59 @@ export const getKPSimilars = async (id) => {
 }
 
 /**
- * Топ популярных фильмов (для случайного)
+ * Топ популярных фильмов (Топ 250, Популярные сериалы и т.д.)
  */
 export const getKPTop = async (page = 1) => {
   const { data } = await kp.get('/v2.2/films/collections', {
     params: { type: 'TOP_POPULAR_ALL', page },
   })
   return (data.items || []).map(normalizeKP)
+}
+
+/**
+ * Случайный фильм (Год 1990-2023, рейтинг от 6.0)
+ */
+export const getRandomKPFilm = async () => {
+  // Случайный год от 1990 до 2023
+  const year = Math.floor(Math.random() * (2023 - 1990 + 1)) + 1990
+
+  // Делаем первый запрос, чтобы узнать сколько страниц есть за этот год
+  const { data: initData } = await kp.get('/v2.2/films', {
+    params: {
+      yearFrom: year,
+      yearTo: year,
+      ratingFrom: 6,
+      ratingTo: 10,
+      type: 'FILM',
+      page: 1
+    },
+  })
+
+  // Выбираем случайную страницу (максимум 20, чтобы API не ругался)
+  const maxPages = Math.min(initData.totalPages || 1, 20)
+  const randomPage = Math.floor(Math.random() * maxPages) + 1
+
+  // Запрашиваем случайную страницу
+  const { data } = await kp.get('/v2.2/films', {
+    params: {
+      yearFrom: year,
+      yearTo: year,
+      ratingFrom: 6,
+      ratingTo: 10,
+      type: 'FILM',
+      page: randomPage
+    },
+  })
+
+  const films = (data.items || []).map(normalizeKP).filter(f => f.posterUrl)
+
+  // Если на странице ничего нет с постером, берем с первой
+  if (!films.length) {
+    const backupFilms = (initData.items || []).map(normalizeKP).filter(f => f.posterUrl)
+    return backupFilms[Math.floor(Math.random() * backupFilms.length)]
+  }
+
+  return films[Math.floor(Math.random() * films.length)]
 }
 
 /**

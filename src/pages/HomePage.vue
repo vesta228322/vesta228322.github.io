@@ -121,7 +121,7 @@ import {
   Dices 
 } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
-import { searchKP, getKPTop } from '@/api/kp'
+import { searchKP, getRandomKPFilm } from '@/api/kp'
 
 const openAdBlockModal = inject('openAdBlockModal')
 
@@ -220,11 +220,8 @@ const clearSearch = () => {
 const goRandom = async () => {
   randomLoading.value = true
   try {
-    const page = Math.floor(Math.random() * 5) + 1
-    const films = await getKPTop(page)
-    const filtered = films.filter((f) => f.posterUrl)
-    if (filtered.length) {
-      const movie = filtered[Math.floor(Math.random() * filtered.length)]
+    const movie = await getRandomKPFilm()
+    if (movie) {
       router.push(`/movie/${movie.id}`)
     }
   } catch (e) {
