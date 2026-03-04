@@ -46,9 +46,15 @@
             </span>
           </div>
           <h1 class="movie-title">{{ movie.nameRu || movie.nameEn || movie.nameOriginal }}</h1>
-          <p class="original-title" v-if="movie.nameOriginal && movie.nameOriginal !== movie.nameRu">
-            {{ movie.nameOriginal }}
-          </p>
+          <div class="original-title-wrapper">
+            <p class="original-title" v-if="movie.nameOriginal && movie.nameOriginal !== movie.nameRu">
+              {{ movie.nameOriginal }}
+            </p>
+            <button class="share-btn" @click="shareMovie" :class="{ 'copied': shareCopied }" title="Поделиться">
+              <component :is="shareCopied ? Check : Share2" :size="16" />
+              <span>{{ shareCopied ? 'Скопировано' : 'Поделиться' }}</span>
+            </button>
+          </div>
 
           <div class="movie-meta">
             <span v-if="movie.year"><Calendar :size="16" class="meta-icon" /> {{ movie.year }}</span>
@@ -155,7 +161,9 @@ import {
   Users, 
   User, 
   Clapperboard, 
-  X 
+  X,
+  Share2,
+  Check
 } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import { getKPFilm, getKPStaff, getKPSimilars } from '@/api/kp'
@@ -168,6 +176,19 @@ const similar = ref([])
 const alloha = ref(null)
 const allohaLoading = ref(false)
 const showTrailer = ref(false)
+const shareCopied = ref(false)
+
+const shareMovie = async () => {
+  try {
+    await navigator.clipboard.writeText(window.location.href)
+    shareCopied.value = true
+    setTimeout(() => {
+      shareCopied.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy text: ', err)
+  }
+}
 
 const posterUrl = computed(() => {
   // Приоритет: Alloha постер (kitnopoisk CDN) → KP API постер
@@ -366,7 +387,44 @@ onMounted(() => load(route.params.id))
   font-weight: 900; letter-spacing: -1px; line-height: 1.15; margin-bottom: 0.3rem;
 }
 
-.original-title { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
+.original-title { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0; }
+
+.original-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(108, 99, 255, 0.1);
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  color: var(--accent);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-xl);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.share-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.share-btn.copied {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
 
 .movie-meta {
   display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;

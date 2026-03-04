@@ -6,6 +6,9 @@
 
   <!-- Модалка рекомендации блокировщика -->
   <AdBlockModal v-model="showAdBlock" />
+
+  <!-- Кнопка наверх -->
+  <ScrollToTop />
 </template>
 
 <script setup>
@@ -13,6 +16,7 @@ import { ref, onMounted, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import AdBlockModal from '@/components/AdBlockModal.vue'
+import ScrollToTop from '@/components/ScrollToTop.vue'
 import { getKPTop } from '@/api/kp'
 
 const router = useRouter()
