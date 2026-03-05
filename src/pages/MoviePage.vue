@@ -443,10 +443,12 @@ onMounted(() => load(route.params.id))
   transition: all var(--transition);
 }
 
-.share-btn:hover {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+@media (hover: hover) {
+  .share-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
 }
 
 .share-btn.copied {
@@ -527,7 +529,9 @@ onMounted(() => load(route.params.id))
   opacity: 0.8;
 }
 
-.trailer-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
+@media (hover: hover) {
+  .trailer-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
+}
 
 /* Актёры */
 .cast-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; }
@@ -541,10 +545,12 @@ onMounted(() => load(route.params.id))
   cursor: pointer;
 }
 
-.cast-card.clickable:hover { 
-  transform: translateY(-5px); 
-  border-color: var(--accent);
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .cast-card.clickable:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .cast-photo {

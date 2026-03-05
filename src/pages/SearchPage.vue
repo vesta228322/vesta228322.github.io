@@ -226,9 +226,11 @@ onMounted(load);
     background var(--transition);
 }
 
-.page-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  background: var(--bg-secondary);
+@media (hover: hover) {
+  .page-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--bg-secondary);
+  }
 }
 
 .page-btn:disabled {

@@ -114,9 +114,11 @@ img {
   border: 2px solid var(--bg-secondary);
   transition: background 0.3s;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--accent-2) 0%, var(--accent) 100%);
-  box-shadow: 0 0 8px var(--accent-glow);
+@media (hover: hover) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--accent-2) 0%, var(--accent) 100%);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
 }
 ::-webkit-scrollbar-corner {
   background: transparent;

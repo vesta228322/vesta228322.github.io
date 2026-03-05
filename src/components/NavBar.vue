@@ -95,14 +95,17 @@ defineEmits(['random'])
   transition: color var(--transition), background var(--transition);
 }
 
-.nav-link:hover,
-.nav-link--active {
-  color: var(--text-primary);
-  background: var(--bg-card);
+@media (hover: hover) {
+  .nav-link:hover,
+  .nav-link--active {
+    color: var(--text-primary);
+    background: var(--bg-card);
+  }
 }
 
 .nav-link--active {
   color: var(--accent-2);
+  background: var(--bg-card);
 }
 
 .nav-icon {
@@ -147,7 +150,13 @@ defineEmits(['random'])
   transform: scale(0.9);
 }
 
-.bottom-nav-item:hover,
+@media (hover: hover) {
+  .bottom-nav-item:hover,
+  .bottom-nav-item--active {
+    color: var(--accent-2);
+  }
+}
+
 .bottom-nav-item--active {
   color: var(--accent-2);
 }

@@ -284,11 +284,13 @@ watch(
   z-index: 10;
 }
 
-.info-alert-btn:hover {
-  background: #ff9800;
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .info-alert-btn:hover {
+    background: #ff9800;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+    transform: translateY(-2px);
+  }
 }
 
 .info-alert-btn span { font-size: 1.1rem; }
@@ -396,9 +398,11 @@ watch(
   transition: all var(--transition);
 }
 
-.random-btn:hover:not(:disabled) {
-  border-color: var(--accent-2);
-  color: var(--accent-2);
+@media (hover: hover) {
+  .random-btn:hover:not(:disabled) {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
 }
 
 .search-box {
@@ -460,11 +464,13 @@ watch(
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.clear-history-btn:hover { 
-  background: #ef4444; 
-  color: #fff; 
-  border-color: #ef4444; 
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+@media (hover: hover) {
+  .clear-history-btn:hover { 
+    background: #ef4444; 
+    color: #fff; 
+    border-color: #ef4444; 
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  }
 }
 
 @media (max-width: 480px) {
@@ -524,15 +530,25 @@ watch(
   transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
 
-.history-card-wrap:hover .delete-card-btn {
-  opacity: 1;
-  transform: scale(1);
+@media (hover: hover) {
+  .history-card-wrap:hover .delete-card-btn {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .delete-card-btn:hover {
+    background: rgba(239, 68, 68, 0.85);
+    border-color: #ef4444;
+    color: #fff;
+  }
 }
 
-.delete-card-btn:hover {
-  background: rgba(239, 68, 68, 0.85);
-  border-color: #ef4444;
-  color: #fff;
+/* На мобилках всегда показываем кнопку удаления, чтобы её можно было нажать */
+@media (max-width: 768px) {
+  .delete-card-btn {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .card-skeleton { aspect-ratio: 2 / 3; border-radius: var(--radius-md); }

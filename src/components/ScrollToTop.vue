@@ -57,10 +57,12 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-.scroll-to-top:hover {
-  transform: translateY(-4px);
-  background: var(--accent-2);
-  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.4);
+@media (hover: hover) {
+  .scroll-to-top:hover {
+    transform: translateY(-4px);
+    background: var(--accent-2);
+    box-shadow: 0 8px 24px rgba(0, 212, 255, 0.4);
+  }
 }
 
 @media (max-width: 768px) {

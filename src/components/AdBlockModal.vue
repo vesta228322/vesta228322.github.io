@@ -81,7 +81,9 @@ defineEmits(['update:modelValue'])
   cursor: pointer;
   transition: color var(--transition);
 }
-.close-top:hover { color: #fff; }
+@media (hover: hover) {
+  .close-top:hover { color: #fff; }
+}
 
 .modal-header {
   text-align: center;
@@ -156,9 +158,11 @@ defineEmits(['update:modelValue'])
   box-shadow: 0 10px 20px -5px var(--accent-glow);
 }
 
-.install-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 30px -5px var(--accent-glow);
+@media (hover: hover) {
+  .install-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px var(--accent-glow);
+  }
 }
 
 .maybe-later {
@@ -170,7 +174,9 @@ defineEmits(['update:modelValue'])
   padding: 0.5rem;
   transition: color var(--transition);
 }
-.maybe-later:hover { color: var(--text-secondary); text-decoration: underline; }
+@media (hover: hover) {
+  .maybe-later:hover { color: var(--text-secondary); text-decoration: underline; }
+}
 
 /* Анимации */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.4s ease; }

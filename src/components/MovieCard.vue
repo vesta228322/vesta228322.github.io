@@ -96,9 +96,15 @@ const onImgError = (e) => {
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.movie-card:hover .poster-wrap {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 16px 40px rgba(108, 99, 255, 0.3);
+@media (hover: hover) {
+  .movie-card:hover .poster-wrap {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(108, 99, 255, 0.3);
+  }
+
+  .movie-card:hover .hover-overlay {
+    opacity: 1;
+  }
 }
 
 .poster-wrap img {
@@ -175,9 +181,7 @@ const onImgError = (e) => {
   transition: opacity var(--transition);
 }
 
-.movie-card:hover .hover-overlay {
-  opacity: 1;
-}
+
 
 .play-btn {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));

@@ -114,10 +114,12 @@ watch(() => route.params.id, (newId) => {
   margin-bottom: 2rem;
 }
 
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--accent);
-  border-color: rgba(255, 255, 255, 0.2);
+@media (hover: hover) {
+  .back-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--accent);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
 }
 
 .actor-header {

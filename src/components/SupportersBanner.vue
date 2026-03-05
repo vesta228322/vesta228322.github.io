@@ -173,11 +173,13 @@ onUnmounted(() => {
   right: 0;
 }
 
-.supporter-card:hover {
-  background: rgba(145, 70, 255, 0.12);
-  border-color: rgba(145, 70, 255, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(145, 70, 255, 0.2);
+@media (hover: hover) {
+  .supporter-card:hover {
+    background: rgba(145, 70, 255, 0.12);
+    border-color: rgba(145, 70, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(145, 70, 255, 0.2);
+  }
 }
 
 .avatar-wrapper {
@@ -190,9 +192,11 @@ onUnmounted(() => {
   transition: all 0.3s ease;
 }
 
-.supporter-card:hover .avatar-wrapper {
-  background: linear-gradient(135deg, #9146FF, #c084fc);
-  transform: rotate(-3deg);
+@media (hover: hover) {
+  .supporter-card:hover .avatar-wrapper {
+    background: linear-gradient(135deg, #9146FF, #c084fc);
+    transform: rotate(-3deg);
+  }
 }
 
 .avatar {
@@ -258,9 +262,11 @@ onUnmounted(() => {
   transition: all 0.3s ease;
 }
 
-.supporter-card:hover .visit-btn {
-  color: #fff;
-  background: rgba(145, 70, 255, 0.3);
+@media (hover: hover) {
+  .supporter-card:hover .visit-btn {
+    color: #fff;
+    background: rgba(145, 70, 255, 0.3);
+  }
 }
 
 /* Прогресс-бар */

@@ -150,12 +150,20 @@ onMounted(load)
   transition: all var(--transition);
 }
 
-.tab-btn.active,
-.tab-btn:hover {
+.tab-btn.active {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   border-color: transparent;
   color: #fff;
   box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+@media (hover: hover) {
+  .tab-btn:hover {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 16px var(--accent-glow);
+  }
 }
 
 .movies-grid {
@@ -188,9 +196,11 @@ onMounted(load)
   transition: all var(--transition);
 }
 
-.page-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  background: var(--bg-secondary);
+@media (hover: hover) {
+  .page-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--bg-secondary);
+  }
 }
 
 .page-btn:disabled {
