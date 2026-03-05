@@ -51,7 +51,7 @@ import { Heart, ExternalLink, Twitch } from 'lucide-vue-next'
 const currentIndex = ref(0)
 const isPaused = ref(false)
 const progress = ref(0)
-const ROTATION_TIME = 7000 // 7 секунд
+const ROTATION_TIME = 12000 // 12 секунд
 const PROGRESS_STEP = 100 // обновляем каждые 100мс
 
 const supporters = [
