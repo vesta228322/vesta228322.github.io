@@ -9,6 +9,9 @@
 
   <!-- Кнопка наверх -->
   <ScrollToTop />
+
+  <!-- Баннер саппортеров -->
+  <SupportersBanner />
 </template>
 
 <script setup>
@@ -17,6 +20,7 @@ import { useRouter } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import AdBlockModal from '@/components/AdBlockModal.vue'
 import ScrollToTop from '@/components/ScrollToTop.vue'
+import SupportersBanner from '@/components/SupportersBanner.vue'
 import { getRandomKPFilm } from '@/api/kp'
 
 const router = useRouter()
