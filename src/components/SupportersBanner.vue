@@ -19,8 +19,8 @@
         >
           <div class="avatar-wrapper">
             <img :src="currentSupporter.avatar" :alt="currentSupporter.name" class="avatar" />
-            <div class="twitch-badge">
-              <Twitch :size="10" fill="currentColor" />
+            <div class="twitch-badge-custom">
+              <img src="@/assets/twitch-tile.svg" alt="Twitch" class="twitch-icon-img" />
             </div>
           </div>
           <div class="supporter-info">
@@ -202,20 +202,25 @@ onUnmounted(() => {
   border-radius: 10px;
 }
 
-.twitch-badge {
+.twitch-badge-custom {
   position: absolute;
   bottom: -4px;
   right: -4px;
-  background: #9146FF;
-  color: #fff;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #000;
+  border: 1.5px solid #000;
   box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.twitch-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .supporter-info {
