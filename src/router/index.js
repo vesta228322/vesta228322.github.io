@@ -5,19 +5,19 @@ import TopPage from '@/pages/TopPage.vue'
 import ActorPage from '@/pages/ActorPage.vue'
 
 const routes = [
-  { path: '/', component: HomePage },
-  { path: '/movie/:id', component: MoviePage },
-  { path: '/top', component: TopPage },
-  { path: '/actor/:id', component: ActorPage },
-  { path: '/search', redirect: '/' },
+    { path: '/', component: HomePage },
+    { path: '/movie/:id', component: MoviePage },
+    { path: '/top', component: TopPage },
+    { path: '/actor/:id', component: ActorPage },
+    { path: '/search', redirect: '/' },
 ]
 
 const router = createRouter({
-  history: createWebHistory('/kinoflow/'),
-  routes,
-  scrollBehavior() {
-    return { top: 0 }
-  },
+    history: createWebHistory('/kinoflow/'),
+    routes,
+    scrollBehavior() {
+        return { top: 0 }
+    },
 })
 
 export default router
