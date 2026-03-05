@@ -104,6 +104,55 @@ export const getRandomKPFilm = async () => {
 }
 
 /**
+ * Полная информация об актёре и его лучших фильмах
+ */
+export const getKPStaffDetails = async (id) => {
+  const { data } = await kp.get(`/v1/staff/${id}`)
+
+  if (!data) throw new Error('Актёр не найден')
+
+  // Фильтруем только фильмы где он был именно актером
+  // и отбрасываем дубликаты фильмов (один и тот же фильм может быть несколько раз)
+  const uniqueMovies = []
+  const seenIds = new Set()
+
+  if (data.films) {
+    // Сортируем по рейтингу, чтобы крутые фильмы были первыми
+    const sortedFilms = data.films
+      .filter(f => f.professionKey === 'ACTOR' && f.rating)
+      .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+
+    for (const film of sortedFilms) {
+      if (!seenIds.has(film.filmId)) {
+        seenIds.add(film.filmId)
+        uniqueMovies.push({
+          id: film.filmId,
+          title: film.nameRu || film.nameEn || 'Без названия',
+          name: film.nameRu,
+          original_title: film.nameEn,
+          // API не отдает постеры в этом эндпоинте, но у них предсказуемый URL
+          posterUrl: `https://kinopoiskapiunofficial.tech/images/posters/kp/${film.filmId}.jpg`,
+          poster_path: null,
+          vote_average: parseFloat(film.rating),
+          release_date: null,
+        })
+      }
+      if (uniqueMovies.length >= 24) break // Берем топ-24 фильма
+    }
+  }
+
+  return {
+    id: data.personId,
+    nameRu: data.nameRu,
+    nameEn: data.nameEn,
+    posterUrl: data.posterUrl,
+    professionStat: data.profession,
+    movies: uniqueMovies
+  }
+}
+
+
+/**
  * Нормализация KP-объекта фильма → формат совместимый с MovieCard
  */
 export const normalizeKP = (film) => ({

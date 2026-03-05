@@ -2,11 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/pages/HomePage.vue'
 import MoviePage from '@/pages/MoviePage.vue'
 import TopPage from '@/pages/TopPage.vue'
+import ActorPage from '@/pages/ActorPage.vue'
 
 const routes = [
   { path: '/', component: HomePage },
   { path: '/movie/:id', component: MoviePage },
   { path: '/top', component: TopPage },
+  { path: '/actor/:id', component: ActorPage },
   { path: '/search', redirect: '/' },
 ]
 

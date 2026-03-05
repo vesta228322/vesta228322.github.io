@@ -120,7 +120,12 @@
         <div class="cast-section" v-if="cast.length">
           <h2 class="section-title">В ролях <Users :size="20" class="title-icon" /></h2>
           <div class="cast-grid">
-            <div v-for="actor in cast" :key="actor.staffId" class="cast-card">
+            <div 
+              v-for="actor in cast" 
+              :key="actor.staffId" 
+              class="cast-card clickable"
+              @click="router.push(`/actor/${actor.staffId}`)"
+            >
               <div class="cast-photo">
                 <img v-if="actor.posterUrl" :src="actor.posterUrl" :alt="actor.nameRu" />
                 <User v-else :size="48" class="cast-no-photo" />
@@ -152,7 +157,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { 
   Calendar, 
   Clock, 
@@ -170,6 +175,7 @@ import { getKPFilm, getKPStaff, getKPSimilars } from '@/api/kp'
 import { getAllohaByKp } from '@/api/alloha'
 
 const route = useRoute()
+const router = useRouter()
 const movie = ref(null)
 const cast = ref([])
 const similar = ref([])
@@ -528,10 +534,18 @@ onMounted(() => load(route.params.id))
 
 .cast-card {
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-md); overflow: hidden; transition: transform var(--transition);
+  border-radius: var(--radius-md); overflow: hidden; transition: all var(--transition);
 }
 
-.cast-card:hover { transform: translateY(-3px); }
+.cast-card.clickable {
+  cursor: pointer;
+}
+
+.cast-card.clickable:hover { 
+  transform: translateY(-5px); 
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
 
 .cast-photo {
   aspect-ratio: 2 / 3; background: var(--bg-secondary); display: flex;
