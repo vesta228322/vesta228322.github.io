@@ -67,8 +67,9 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .scroll-to-top {
-    bottom: 1.5rem;
-    right: 1.5rem;
+    /* 64px (height of bottom nav) + 1.25rem padding */
+    bottom: calc(64px + 1.25rem + env(safe-area-inset-bottom, 0px));
+    right: 1.25rem;
     width: 44px;
     height: 44px;
   }
