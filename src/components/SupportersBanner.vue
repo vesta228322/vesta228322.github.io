@@ -28,7 +28,7 @@
             <span class="role">{{ currentSupporter.role }}</span>
           </div>
           <div class="visit-btn">
-            Смотреть <ExternalLink :size="14" />
+            <span>Смотреть</span> <ExternalLink :size="14" />
           </div>
         </a>
       </Transition>
@@ -300,13 +300,58 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .supporters-banner {
     flex-direction: column;
-    padding: 1.5rem 1rem;
-    gap: 1rem;
+    padding: 0.8rem 1rem;
+    gap: 0.6rem;
+    /* Учитываем высоту мобильной навигации (64px) + отступы интерфейса (safe area) */
+    margin-bottom: calc(64px + env(safe-area-inset-bottom));
   }
   
+  .banner-title {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
+
   .banner-content {
     width: 100%;
     min-width: 0;
+    height: 48px;
+  }
+
+  .supporter-card {
+    padding: 0.3rem 0.8rem 0.3rem 0.4rem;
+    gap: 0.75rem;
+  }
+
+  .avatar-wrapper {
+    width: 34px;
+    height: 34px;
+  }
+
+  .name {
+    font-size: 0.85rem;
+  }
+
+  .role {
+    font-size: 0.6rem;
+  }
+
+  .visit-btn {
+    padding: 4px 8px;
+  }
+
+  .visit-btn span {
+    display: none; /* Скрываем текст "Смотреть" на мобилках */
+  }
+}
+
+@media (max-width: 480px) {
+  .supporters-banner {
+    padding: 0.6rem 0.75rem;
+    margin-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  
+  .banner-title {
+    display: none; /* На совсем маленьких экранах убираем заголовок */
   }
 }
 </style>
