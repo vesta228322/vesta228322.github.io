@@ -117,9 +117,8 @@ onUnmounted(() => {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(145, 70, 255, 0.2);
-  padding: 0.8rem 0;
+  padding: 0.8rem 0 1.2rem 0; /* Увеличили нижний паддинг, чтобы оторвать контент от полосы загрузки */
   width: 100%;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -155,7 +154,7 @@ onUnmounted(() => {
 .banner-content {
   position: relative;
   min-width: 320px;
-  height: 50px;
+  height: 56px; /* Чуть увеличили контейнер */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -174,6 +173,7 @@ onUnmounted(() => {
   position: absolute;
   left: 0;
   right: 0;
+  bottom: 8px; /* Приподняли саму карточку над линией */
 }
 
 @media (hover: hover) {
@@ -275,7 +275,7 @@ onUnmounted(() => {
 /* Прогресс-бар */
 .progress-container {
   position: absolute;
-  bottom: -15px;
+  bottom: 0;
   left: 0;
   right: 0;
   height: 2px;
