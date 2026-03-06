@@ -43,7 +43,6 @@ export const useAuthStore = defineStore('auth', () => {
       if (error) throw error
 
       if (data?.magic_link) {
-        console.log('EDGE FUNCTION SUCCESS:', data)
         const tokenHash = data.hashed_token || new URL(data.magic_link).searchParams.get('token_hash') || new URL(data.magic_link).searchParams.get('token');
 
         if (tokenHash) {
@@ -56,7 +55,6 @@ export const useAuthStore = defineStore('auth', () => {
 
           session.value = sessionData.session
           user.value = sessionData.user
-          console.log('LOGIN SUCCESSFUL!', user.value)
         } else {
           throw new Error('Could not find token in Edge Function response')
         }
