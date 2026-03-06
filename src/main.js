@@ -5,8 +5,14 @@ import router from "./router";
 import "./assets/main.css";
 
 const app = createApp(App);
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
 app.use(router);
+
+// Инициализация Supabase Auth
+import { useAuthStore } from './stores/auth';
+const auth = useAuthStore(pinia);
+auth.init();
 
 // Передаем данные в Яндекс Метрику и обновляем заголовок страницы
 router.afterEach((to) => {

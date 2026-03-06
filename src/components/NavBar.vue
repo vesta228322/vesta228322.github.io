@@ -15,6 +15,9 @@
         <RouterLink to="/top" class="nav-link" active-class="nav-link--active">
           <Flame :size="18" /> Популярное
         </RouterLink>
+        <RouterLink to="/profile" class="nav-link" active-class="nav-link--active">
+          <User :size="18" /> Профиль
+        </RouterLink>
       </nav>
     </div>
   </header>
@@ -33,11 +36,15 @@
       <Dices :size="24" />
       <span class="bottom-label">Случайный</span>
     </button>
+    <RouterLink to="/profile" class="bottom-nav-item" active-class="bottom-nav-item--active">
+      <User :size="24" />
+      <span class="bottom-label">Профиль</span>
+    </RouterLink>
   </nav>
 </template>
 
 <script setup>
-import { House, Flame, Dices, Play } from 'lucide-vue-next'
+import { House, Flame, Dices, Play, User } from 'lucide-vue-next'
 defineEmits(['random'])
 </script>
 

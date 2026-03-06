@@ -174,8 +174,12 @@ import MovieCard from '@/components/MovieCard.vue'
 import { getKPFilm, getKPStaff, getKPSimilars } from '@/api/kp'
 import { getAllohaByKp } from '@/api/alloha'
 
+import { useAuthStore } from '@/stores/auth'
+import { supabase } from '@/api/supabase'
+
 const route = useRoute()
 const router = useRouter()
+const auth = useAuthStore()
 const movie = ref(null)
 const cast = ref([])
 const similar = ref([])
@@ -231,25 +235,47 @@ const backdropStyle = computed(() => {
 })
 
 // Сохранение в историю
-const saveToHistory = (m, allohaData) => {
+const saveToHistory = async (m, allohaData) => {
+  const movie_id = String(route.params.id)
+  const entry = {
+    id: movie_id,
+    title: m.nameRu || m.nameEn || m.nameOriginal,
+    name: m.nameRu,
+    posterUrl: allohaData?.poster || m.posterUrl || null,
+    poster_path: null,
+    vote_average: m.ratingKinopoisk || null,
+    release_date: m.year ? `${m.year}-01-01` : null,
+  }
+
+  // 1. Локальное сохранение
   try {
     const stored = JSON.parse(localStorage.getItem('kf_history') || '[]')
-    const id = route.params.id
-    const filtered = stored.filter((item) => String(item.id) !== String(id))
-    const entry = {
-      id,
-      title: m.nameRu || m.nameEn || m.nameOriginal,
-      name: m.nameRu,
-      // сохраняем полный URL постера
-      posterUrl: allohaData?.poster || m.posterUrl || null,
-      poster_path: null,
-      vote_average: m.ratingKinopoisk || null,
-      release_date: m.year ? `${m.year}-01-01` : null,
-    }
+    const filtered = stored.filter((item) => String(item.id) !== movie_id)
     const updated = [entry, ...filtered].slice(0, 20)
     localStorage.setItem('kf_history', JSON.stringify(updated))
   } catch (e) {
-    console.error('Ошибка сохранения истории:', e)
+    console.error('Ошибка local history:', e)
+  }
+
+  // 2. Облачное сохранение (Supabase)
+  if (auth.user) {
+    try {
+      const { error } = await supabase
+        .from('history')
+        .upsert({
+          user_id: auth.user.id,
+          movie_id: movie_id,
+          title: entry.title,
+          poster_url: entry.posterUrl,
+          vote_average: entry.vote_average,
+          release_date: entry.release_date,
+          viewed_at: new Date().toISOString()
+        }, { onConflict: 'user_id, movie_id' })
+      
+      if (error) console.error('Supabase history error:', error)
+    } catch (e) {
+      console.error('Cloud save failed:', e)
+    }
   }
 }
 

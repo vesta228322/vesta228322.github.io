@@ -3,12 +3,14 @@ import HomePage from '@/pages/HomePage.vue'
 import MoviePage from '@/pages/MoviePage.vue'
 import TopPage from '@/pages/TopPage.vue'
 import ActorPage from '@/pages/ActorPage.vue'
+import ProfilePage from '@/pages/ProfilePage.vue'
 
 const routes = [
     { path: '/', component: HomePage },
     { path: '/movie/:id', component: MoviePage },
     { path: '/top', component: TopPage },
     { path: '/actor/:id', component: ActorPage },
+    { path: '/profile', component: ProfilePage },
     { path: '/search', redirect: '/' },
 ]
 
