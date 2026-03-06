@@ -58,9 +58,11 @@
             <p>Войдите, чтобы синхронизировать историю просмотров и избранное между всеми вашими устройствами.</p>
           </div>
 
-          <button @click="auth.signInWithTelegram" class="telegram-login-btn">
-            <Send :size="20" /> Войти через Telegram
-          </button>
+          <TelegramLoginWidget 
+            :botName="telegramBotName" 
+            buttonSize="large" 
+            :cornerRadius="12" 
+          />
 
           <p class="login-footer">
             Мы используем официальный виджет Telegram. Безопасно, быстро и без паролей.
@@ -76,9 +78,12 @@ import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { User, LogOut, Play, Send, Film } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
+import TelegramLoginWidget from '@/components/TelegramLoginWidget.vue'
 
 const auth = useAuthStore()
 const history = ref([])
+// Название бота (без @), берется из env или нужно вписать вручную
+const telegramBotName = import.meta.env.VITE_TELEGRAM_BOT_NAME || 'MyKinoFlowBot'
 
 const loadHistory = async () => {
   try {
@@ -177,32 +182,11 @@ onMounted(() => {
   line-height: 1.6;
 }
 
-.telegram-login-btn {
-  width: 100%;
-  padding: 1.2rem;
-  background: #24A1DE; /* Telegram Blue */
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: 800;
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.telegram-button-wrapper {
+  margin: 1.5rem 0;
 }
 
-.telegram-login-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(36, 161, 222, 0.4);
-  filter: brightness(1.1);
-}
-
-.telegram-login-btn:active {
-  transform: scale(0.96);
-}
+/* Старая кнопка удалена, стили оставлены для .login-footer ниже */
 
 .login-footer {
   margin-top: 2rem;

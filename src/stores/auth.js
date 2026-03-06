@@ -22,15 +22,43 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
-  const signInWithTelegram = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'telegram',
-      options: {
-        redirectTo: window.location.origin
+  const signInWithTelegramEdgeFunction = async (telegramUser) => {
+    loading.value = true
+    try {
+      // 1. Отправляем данные от виджета в нашу Edge Function
+      const { data, error } = await supabase.functions.invoke('telegram-auth', {
+        body: telegramUser
+      })
+
+      if (error) throw error
+
+      if (data?.magic_link) {
+        // 2. Функция вернула magic link. Нам нужно "перейти" по нему или выудить токен.
+        // Проще всего использовать verifyOtp с token_hash из ссылки
+        const url = new URL(data.magic_link);
+        const tokenHash = url.searchParams.get('token_hash');
+
+        if (tokenHash) {
+          const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: 'magiclink',
+          });
+
+          if (sessionError) throw sessionError;
+
+          session.value = sessionData.session
+          user.value = sessionData.user
+        }
+      } else {
+        throw new Error('No magic link returned from Edge Function')
       }
-    })
-    if (error) throw error
-    return data
+
+    } catch (err) {
+      console.error('Telegram Auth Error:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
   }
 
   const logout = async () => {
@@ -44,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
     session,
     loading,
     init,
-    signInWithTelegram,
+    signInWithTelegramEdgeFunction,
     logout
   }
 })
