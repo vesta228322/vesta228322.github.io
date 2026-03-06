@@ -43,24 +43,26 @@ export const useAuthStore = defineStore('auth', () => {
       if (error) throw error
 
       if (data?.magic_link) {
-        // 2. Функция вернула magic link. Нам нужно "перейти" по нему или выудить токен.
-        // Проще всего использовать verifyOtp с token_hash из ссылки
-        const url = new URL(data.magic_link);
-        const tokenHash = url.searchParams.get('token_hash');
+        console.log('EDGE FUNCTION SUCCESS:', data)
+        const tokenHash = data.hashed_token || new URL(data.magic_link).searchParams.get('token_hash') || new URL(data.magic_link).searchParams.get('token');
 
         if (tokenHash) {
           const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({
             token_hash: tokenHash,
             type: 'magiclink',
+            email: data.user?.email
           });
 
           if (sessionError) throw sessionError;
 
           session.value = sessionData.session
           user.value = sessionData.user
+          console.log('LOGIN SUCCESSFUL!', user.value)
+        } else {
+          throw new Error('Could not find token in Edge Function response')
         }
       } else {
-        throw new Error('No magic link returned from Edge Function')
+        throw new Error('No magic link returned from Edge Function: ' + JSON.stringify(data))
       }
 
     } catch (err) {

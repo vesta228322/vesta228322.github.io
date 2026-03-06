@@ -124,12 +124,13 @@ serve(async (req) => {
     
     if (linkError) throw linkError
 
-    // Возвращаем magic link и данные пользователя. На фронтенде мы вытащим из квери-параметров token_hash 
+    // Возвращаем magic link, hashed_token и данные пользователя. На фронтенде мы вытащим из квери-параметров token_hash 
     // и сделаем verifyOtp
     return new Response(JSON.stringify({ 
         message: 'Successfully verified',
         user: user,
-        magic_link: linkData.properties.action_link
+        magic_link: linkData.properties.action_link,
+        hashed_token: linkData.properties?.hashed_token
     }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
 
   } catch (error) {
