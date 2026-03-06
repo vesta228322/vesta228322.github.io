@@ -49,8 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (tokenHash) {
           const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({
             token_hash: tokenHash,
-            type: 'magiclink',
-            email: data.user?.email
+            type: 'magiclink'
           });
 
           if (sessionError) throw sessionError;
