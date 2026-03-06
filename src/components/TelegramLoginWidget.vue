@@ -28,8 +28,12 @@ onMounted(() => {
   // Телеграм заменяет script на iframe кнопку. 
   // Мы делаем это программно, чтобы кнопка реагировала на события Vue.
   window.onTelegramAuth = async (user) => {
-    // Эта функция вызывается виджетом при успешной авторизации в Телеграм
-    await authStore.signInWithTelegramEdgeFunction(user)
+    console.log('TELEGRAM WIDGET TRIGGERED:', user)
+    try {
+      await authStore.signInWithTelegramEdgeFunction(user)
+    } catch (e) {
+      console.error('FAILED TO LOGIN AFTER WIDGET:', e)
+    }
   }
 
   const script = document.createElement('script')
