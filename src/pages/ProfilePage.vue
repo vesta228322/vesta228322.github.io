@@ -13,8 +13,9 @@
             <User v-else :size="64" />
           </div>
           <div class="profile-info">
-            <h1>{{ auth.user.user_metadata.full_name || auth.user.email }}</h1>
-            <p class="email">{{ auth.user.email }}</p>
+            <h1>{{ auth.user.user_metadata.name || auth.user.user_metadata.full_name || 'Пользователь Telegram' }}</h1>
+            <p v-if="auth.user.user_metadata.username" class="email">@{{ auth.user.user_metadata.username }}</p>
+            <p v-else class="email">ID: {{ auth.user.user_metadata.provider_id }}</p>
             <button @click="auth.logout" class="logout-btn">
               <LogOut :size="16" /> Выйти
             </button>
