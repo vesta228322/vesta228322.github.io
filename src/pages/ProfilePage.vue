@@ -16,9 +16,14 @@
             <h1>{{ auth.user.user_metadata.name || auth.user.user_metadata.full_name || 'Пользователь Telegram' }}</h1>
             <p v-if="auth.user.user_metadata.username" class="email">@{{ auth.user.user_metadata.username }}</p>
             <p v-else class="email">ID: {{ auth.user.user_metadata.provider_id }}</p>
-            <button @click="auth.logout" class="logout-btn">
-              <LogOut :size="16" /> Выйти
-            </button>
+            <div class="profile-actions">
+              <button @click="auth.logout" class="logout-btn secondary">
+                <LogOut :size="16" /> Выйти с устройства
+              </button>
+              <button @click="handleFullLogout" class="logout-btn primary">
+                <UserMinus :size="16" /> Сменить аккаунт
+              </button>
+            </div>
           </div>
         </header>
 
@@ -77,7 +82,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { User, LogOut, Play, Send, Film } from 'lucide-vue-next'
+import { User, LogOut, Play, Send, Film, UserMinus } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import TelegramLoginWidget from '@/components/TelegramLoginWidget.vue'
 
@@ -122,6 +127,22 @@ const loadHistory = async () => {
 onMounted(() => {
   loadHistory()
 })
+
+const handleFullLogout = async () => {
+  // Выходим из самого сервиса
+  await auth.logout()
+  // Пытаемся разлогинить виджет (официального API нет, но сработает очистка localStorage телеграма)
+  // Чтобы наверняка, открываем невидимый iframe на oauth.telegram.org/auth/logout или чистим куки
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = `https://oauth.telegram.org/auth/logout?bot_id=${import.meta.env.VITE_TELEGRAM_BOT_NAME}`;
+  document.body.appendChild(iframe);
+  
+  setTimeout(() => {
+    document.body.removeChild(iframe);
+    window.location.reload();
+  }, 1000);
+}
 </script>
 
 <style scoped>
@@ -228,13 +249,13 @@ onMounted(() => {
   justify-content: center;
   position: relative;
   z-index: 2;
-  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.3), 0 10px 25px rgba(0,0,0,0.4);
+  box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.3), 0 5px 15px rgba(0,0,0,0.3); /* Уменьшили обводку и тень */
 }
 
 .avatar-large::after {
   content: '';
   position: absolute;
-  inset: -6px;
+  inset: -3px; /* Уменьшили толщину градиентной рамки */
   border-radius: 50%;
   background: conic-gradient(from 0deg, var(--accent), #ff75e6, var(--accent));
   z-index: -1;
@@ -251,7 +272,7 @@ onMounted(() => {
   height: 100%; 
   object-fit: cover; 
   border-radius: 50%; 
-  border: 4px solid var(--bg-card); /* Отсекаем градиент изнутри */
+  border: 3px solid var(--bg-card); /* Отсекаем градиент изнутри тоньше */
 }
 
 .profile-info {
@@ -277,22 +298,42 @@ onMounted(() => {
   letter-spacing: 0.5px;
 }
 
+.profile-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .logout-btn {
   display: flex; 
   align-items: center; 
   gap: 0.5rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #f87171; 
   padding: 0.6rem 1.4rem; 
   border-radius: 12px;
-  font-size: 0.9rem; 
+  font-size: 0.85rem; 
   font-weight: 700; 
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.logout-btn:hover { 
+.logout-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.logout-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.logout-btn.primary {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171; 
+}
+
+.logout-btn.primary:hover { 
   background: rgba(239, 68, 68, 0.2); 
   border-color: rgba(239, 68, 68, 0.4); 
   color: #fca5a5;
