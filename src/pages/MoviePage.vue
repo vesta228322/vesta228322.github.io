@@ -145,6 +145,9 @@
             <MovieCard v-for="m in similar" :key="m.id" :movie="m" />
           </div>
         </div>
+
+        <!-- Комментарии -->
+        <CommentsSection :movieId="route.params.id" />
       </main>
     </div>
   </div>
@@ -171,6 +174,7 @@ import {
   Check
 } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
+import CommentsSection from '@/components/CommentsSection.vue'
 import { getKPFilm, getKPStaff, getKPSimilars } from '@/api/kp'
 import { getAllohaByKp } from '@/api/alloha'
 

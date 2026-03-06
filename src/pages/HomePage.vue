@@ -122,11 +122,15 @@ import {
 } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import { searchKP, getRandomKPFilm } from '@/api/kp'
+import { useAuthStore } from '@/stores/auth'
+import { supabase } from '@/api/supabase'
 
 const openAdBlockModal = inject('openAdBlockModal')
 
 const router = useRouter()
 const route = useRoute()
+
+const auth = useAuthStore()
 
 const searchType = ref('title')
 const query = ref('')
@@ -144,22 +148,54 @@ const placeholder = computed(() =>
     : 'Введите название фильма...'
 )
 
-const loadHistory = () => {
+const loadHistory = async () => {
   try {
+    // 1. Сначала пытаемся из локального (для быстроты)
     history.value = JSON.parse(localStorage.getItem('kf_history') || '[]')
-  } catch {
-    history.value = []
+    
+    // 2. Если авторизован, тянем из сети
+    if (auth.user && supabase) {
+      const { data, error } = await supabase
+        .from('history')
+        .select('*')
+        .eq('user_id', auth.user.id)
+        .order('viewed_at', { ascending: false })
+        .limit(20)
+
+      if (error) throw error
+      
+      if (data && data.length > 0) {
+        history.value = data.map(item => ({
+          id: item.movie_id,
+          title: item.title,
+          posterUrl: item.poster_url,
+          vote_average: item.vote_average,
+          release_date: item.release_date
+        }))
+        // опционально можно синхронизировать с localStorage
+        localStorage.setItem('kf_history', JSON.stringify(history.value))
+      }
+    }
+  } catch (err) {
+    console.error('Ошибка загрузки истории:', err)
   }
 }
 
-const clearHistory = () => {
+const clearHistory = async () => {
   localStorage.removeItem('kf_history')
   history.value = []
+  if (auth.user && supabase) {
+    await supabase.from('history').delete().eq('user_id', auth.user.id)
+  }
 }
 
-const deleteFromHistory = (id) => {
+const deleteFromHistory = async (id) => {
   history.value = history.value.filter((m) => String(m.id) !== String(id))
   localStorage.setItem('kf_history', JSON.stringify(history.value))
+  
+  if (auth.user && supabase) {
+    await supabase.from('history').delete().eq('user_id', auth.user.id).eq('movie_id', id)
+  }
 }
 
 const setType = (type) => {

@@ -29,12 +29,8 @@
 
         <section class="stats-grid">
           <div class="stat-card glass">
-            <span class="stat-label">Фильмов просмотрено</span>
+            <span class="stat-label">Просмотрено фильмов</span>
             <span class="stat-value">{{ history.length }}</span>
-          </div>
-          <div class="stat-card glass">
-            <span class="stat-label">В избранном</span>
-            <span class="stat-value">0</span>
           </div>
         </section>
 
@@ -82,6 +78,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { supabase } from '@/api/supabase'
 import { User, LogOut, Play, Send, Film, UserMinus } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import TelegramLoginWidget from '@/components/TelegramLoginWidget.vue'
@@ -343,7 +340,8 @@ const handleFullLogout = async () => {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
+  max-width: 400px; /* Сделаем карточку компактнее, т.к. она теперь одна */
   gap: 1.5rem;
   margin-bottom: 3.5rem;
 }
