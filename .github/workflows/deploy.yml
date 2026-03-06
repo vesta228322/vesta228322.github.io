@@ -30,6 +30,9 @@ jobs:
           VITE_TMDB_KEY: ${{ secrets.VITE_TMDB_KEY }}
           VITE_KP_KEY: ${{ secrets.VITE_KP_KEY }}
           VITE_ALLOHA_TOKEN: ${{ secrets.VITE_ALLOHA_TOKEN }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_TELEGRAM_BOT_NAME: ${{ secrets.VITE_TELEGRAM_BOT_NAME }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

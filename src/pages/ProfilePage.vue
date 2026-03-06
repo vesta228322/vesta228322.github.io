@@ -91,8 +91,8 @@ const loadHistory = async () => {
     const local = JSON.parse(localStorage.getItem('kf_history') || '[]')
     history.value = local
 
-    // 2. Если залогинен — тянем из облака
-    if (auth.user) {
+    // 2. Если залогинен и Supabase инициализирован — тянем из облака
+    if (auth.user && supabase) {
       const { data, error } = await supabase
         .from('history')
         .select('*')

@@ -9,6 +9,12 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Инициализация при загрузке
   const init = async () => {
+    if (!supabase) {
+      console.warn('Supabase client is not initialized. Auth features are disabled.')
+      loading.value = false
+      return
+    }
+
     loading.value = true
     const { data } = await supabase.auth.getSession()
     session.value = data.session
@@ -23,6 +29,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const signInWithTelegramEdgeFunction = async (telegramUser) => {
+    if (!supabase) {
+      console.error('Cannot sign in: Supabase client is not initialized.')
+      return
+    }
     loading.value = true
     try {
       // 1. Отправляем данные от виджета в нашу Edge Function
@@ -62,6 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
+    if (!supabase) return
     await supabase.auth.signOut()
     user.value = null
     session.value = null
