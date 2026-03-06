@@ -200,68 +200,209 @@ onMounted(() => {
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  padding: 2.5rem;
+  gap: 2.5rem;
+  padding: 3rem;
   margin-bottom: 2rem;
+  background: linear-gradient(145deg, rgba(20,20,30,0.8) 0%, rgba(30,25,45,0.6) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; width: 300px; height: 300px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  opacity: 0.1;
+  filter: blur(40px);
+  transform: translate(30%, -30%);
 }
 
 .avatar-large {
-  width: 90px; height: 90px;
+  width: 100px; 
+  height: 100px;
   background: var(--bg-secondary);
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  border: 3px solid var(--accent);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.3), 0 10px 25px rgba(0,0,0,0.4);
 }
 
-.avatar-large img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-large::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--accent), #ff75e6, var(--accent));
+  z-index: -1;
+  animation: rotate 4s linear infinite;
+  opacity: 0.8;
+}
 
-.profile-info h1 { margin-bottom: 0.3rem; font-size: 1.8rem; font-weight: 900; }
-.email { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 0.95rem; }
+@keyframes rotate {
+  100% { transform: rotate(360deg); }
+}
+
+.avatar-large img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  border-radius: 50%; 
+  border: 4px solid var(--bg-card); /* Отсекаем градиент изнутри */
+}
+
+.profile-info {
+  z-index: 2;
+}
+
+.profile-info h1 { 
+  margin-bottom: 0.4rem; 
+  font-size: 2.2rem; 
+  font-weight: 900; 
+  letter-spacing: -0.5px;
+  background: linear-gradient(100deg, #ffffff, #dcdcdc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.email { 
+  color: var(--accent); 
+  margin-bottom: 1.5rem; 
+  font-size: 1rem; 
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 
 .logout-btn {
-  display: flex; align-items: center; gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
-  color: #fff; padding: 0.5rem 1.2rem; border-radius: var(--radius-md);
-  font-size: 0.85rem; font-weight: 700; cursor: pointer;
-  transition: all 0.2s;
+  display: flex; 
+  align-items: center; 
+  gap: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171; 
+  padding: 0.6rem 1.4rem; 
+  border-radius: 12px;
+  font-size: 0.9rem; 
+  font-weight: 700; 
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.logout-btn:hover { background: rgba(239, 68, 68, 0.1); border-color: #ef444455; color: #f87171; }
+.logout-btn:hover { 
+  background: rgba(239, 68, 68, 0.2); 
+  border-color: rgba(239, 68, 68, 0.4); 
+  color: #fca5a5;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2);
+}
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 }
 
 .stat-card {
-  padding: 1.8rem;
-  display: flex; flex-direction: column; gap: 0.6rem;
+  padding: 2.5rem 2rem;
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.8rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
-.stat-value { font-size: 2.2rem; font-weight: 900; color: var(--accent); }
+@media (hover: hover) {
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  }
+  .stat-card:hover::before {
+    opacity: 0.15;
+  }
+}
 
-.account-section h2 { margin-bottom: 1.5rem; font-weight: 900; font-size: 1.5rem; }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(45deg, transparent, var(--accent), transparent);
+  opacity: 0.05;
+  transition: opacity 0.3s ease;
+}
+
+.stat-label { 
+  font-size: 0.85rem; 
+  color: var(--text-muted); 
+  text-transform: uppercase; 
+  letter-spacing: 2px; 
+  font-weight: 700; 
+  z-index: 1;
+}
+
+.stat-value { 
+  font-size: 3rem; 
+  font-weight: 900; 
+  color: #fff;
+  text-shadow: 0 0 20px rgba(108, 99, 255, 0.4);
+  z-index: 1;
+}
+
+.account-section h2 { 
+  margin-bottom: 2rem; 
+  font-weight: 900; 
+  font-size: 1.8rem; 
+  display: inline-block;
+  position: relative;
+}
+
+.account-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+}
 
 .history-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 1.5rem;
 }
 
 .empty-state {
-  text-align: center; padding: 5rem; color: var(--text-muted);
-  display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
+  text-align: center; 
+  padding: 6rem 2rem; 
+  color: var(--text-muted);
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 1.5rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  border-style: dashed;
 }
 
 @media (max-width: 600px) {
-  .profile-header { flex-direction: column; text-align: center; padding: 2rem; }
-  .stats-grid { grid-template-columns: 1fr; }
+  .profile-header { 
+    flex-direction: column; 
+    text-align: center; 
+    padding: 2.5rem 1.5rem; 
+    gap: 1.5rem;
+  }
+  .logout-btn { margin: 0 auto; }
+  .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .stat-card { padding: 2rem 1.5rem; }
   .login-card { margin: 2rem 1rem; padding: 2.5rem 1.5rem; }
 }
 </style>

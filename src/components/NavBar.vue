@@ -15,7 +15,7 @@
         <RouterLink to="/top" class="nav-link" active-class="nav-link--active">
           <Flame :size="18" /> Популярное
         </RouterLink>
-        <RouterLink to="/profile" class="nav-link" active-class="nav-link--active">
+        <RouterLink to="/profile" class="nav-link profile-link" active-class="nav-link--active">
           <User :size="18" /> Профиль
         </RouterLink>
       </nav>
@@ -88,6 +88,7 @@ defineEmits(['random'])
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  flex: 1; /* Чтобы навигация занимала оставшееся место и margin-left: auto работал */
 }
 
 .nav-link {
@@ -117,6 +118,10 @@ defineEmits(['random'])
 
 .nav-icon {
   font-size: 1rem;
+}
+
+.profile-link {
+  margin-left: auto; /* Сдвигает Профиль вправо */
 }
 
 /* Нижняя панель (мобильная) */

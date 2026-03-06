@@ -120,8 +120,11 @@ onUnmounted(() => {
   padding: 0.8rem 0;
   width: 100%;
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
-  position: relative;
-  z-index: 40;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 90; /* Ниже Navbar и BottomNav (z-index 100) */
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .banner-title {
@@ -309,7 +312,8 @@ onUnmounted(() => {
     padding: 0.8rem 1rem;
     gap: 0.6rem;
     /* Учитываем высоту мобильной навигации (64px) + отступы интерфейса (safe area) */
-    margin-bottom: calc(64px + env(safe-area-inset-bottom));
+    bottom: calc(64px);
+    padding-bottom: 0; /* навигация уже учитывает safe-area, баннер над ней */
   }
   
   .banner-title {
@@ -353,7 +357,6 @@ onUnmounted(() => {
 @media (max-width: 480px) {
   .supporters-banner {
     padding: 0.6rem 0.75rem;
-    margin-bottom: calc(64px + env(safe-area-inset-bottom));
   }
   
   .banner-title {
