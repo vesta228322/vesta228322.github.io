@@ -6,6 +6,11 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const session = ref(null)
   const loading = ref(true)
+  const isInitialized = ref(false)
+  let resolveInit
+  const initialized = new Promise(resolve => {
+    resolveInit = resolve
+  })
 
   // Инициализация при загрузке
   const init = async () => {
@@ -20,6 +25,8 @@ export const useAuthStore = defineStore('auth', () => {
     session.value = data.session
     user.value = data.session?.user || null
     loading.value = false
+    isInitialized.value = true
+    resolveInit()
 
     // Слушаем изменения (вход/выход)
     supabase.auth.onAuthStateChange((_event, _session) => {
@@ -81,6 +88,8 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     session,
     loading,
+    isInitialized,
+    initialized,
     init,
     signInWithTelegramEdgeFunction,
     logout

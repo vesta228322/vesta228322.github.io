@@ -240,6 +240,8 @@ const backdropStyle = computed(() => {
 
 // Сохранение в историю
 const saveToHistory = async (m, allohaData) => {
+  if (!m) return
+  
   const movie_id = String(route.params.id)
   const entry = {
     id: movie_id,
@@ -251,7 +253,7 @@ const saveToHistory = async (m, allohaData) => {
     release_date: m.year ? `${m.year}-01-01` : null,
   }
 
-  // 1. Локальное сохранение
+  // 1. Локальное сохранение (всегда)
   try {
     const stored = JSON.parse(localStorage.getItem('kf_history') || '[]')
     const filtered = stored.filter((item) => String(item.id) !== movie_id)
@@ -261,8 +263,12 @@ const saveToHistory = async (m, allohaData) => {
     console.error('Ошибка local history:', e)
   }
 
-  // 2. Облачное сохранение (Supabase)
-  if (auth.user) {
+  // 2. Облачное сохранение (Supabase) - Ждем инициализацию auth
+  if (auth.loading && !auth.isInitialized) {
+    await auth.initialized
+  }
+
+  if (auth.user && supabase) {
     try {
       const { error } = await supabase
         .from('history')
@@ -282,6 +288,13 @@ const saveToHistory = async (m, allohaData) => {
     }
   }
 }
+
+// Следим за входом пользователя, чтобы сохранить историю, если он вошел прямо на этой странице
+watch(() => auth.user, (newUser) => {
+  if (newUser && movie.value) {
+    saveToHistory(movie.value, alloha.value)
+  }
+})
 
 const load = async (id) => {
   movie.value = null

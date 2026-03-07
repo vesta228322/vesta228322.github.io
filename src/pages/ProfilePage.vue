@@ -91,11 +91,16 @@ const telegramBotName = import.meta.env.VITE_TELEGRAM_BOT_NAME || 'Kinoo_Flow_bo
 
 const loadHistory = async () => {
   try {
-    // 1. Сначала грузим локальную (для скорости)
+    // 1. Сначала всегда показываем локальную (из localStorage)
     const local = JSON.parse(localStorage.getItem('kf_history') || '[]')
     history.value = local
 
-    // 2. Если залогинен и Supabase инициализирован — тянем из облака
+    // 2. Ждем, если авторизация еще загружается
+    if (auth.loading && !auth.isInitialized) {
+      await auth.initialized
+    }
+
+    // 3. Если залогинен и Supabase доступен — тянем из облака
     if (auth.user && supabase) {
       const { data, error } = await supabase
         .from('history')
@@ -121,6 +126,12 @@ const loadHistory = async () => {
     console.error('History load error:', e)
   }
 }
+
+// Следим за состоянием пользователя. Если он вошел — перегружаем историю из облака
+import { watch } from 'vue'
+watch(() => auth.user, (newUser) => {
+  if (newUser) loadHistory()
+}, { immediate: false })
 
 onMounted(() => {
   loadHistory()
