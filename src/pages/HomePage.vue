@@ -45,7 +45,9 @@
           @input="handleInput"
           aria-label="Поиск фильмов"
         />
-        <button v-if="query" class="clear-btn" @click="clearSearch" aria-label="Очистить поиск">✕</button>
+        <button v-if="query" class="clear-btn" @click="clearSearch" aria-label="Очистить поиск">
+          <X :size="18" />
+        </button>
       </div>
     </div>
 
@@ -112,13 +114,10 @@
 import { ref, computed, onMounted, watch, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { 
-  Search, 
-  History, 
-  Trash2, 
-  Clapperboard, 
   Play, 
   Megaphone, 
-  Dices 
+  Dices,
+  X
 } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import { searchKP, getRandomKPFilm } from '@/api/kp'
@@ -470,6 +469,27 @@ watch(
   font-family: inherit;
   font-size: 1rem;
   padding: 0.9rem 0;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  margin-right: -0.5rem;
+  border-radius: 50%;
+  transition: all var(--transition);
+}
+
+@media (hover: hover) {
+  .clear-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+  }
 }
 
 /* ---- Контент ---- */

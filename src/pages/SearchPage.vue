@@ -13,12 +13,17 @@
 
       <!-- Inline поиск -->
       <div class="search-bar fade-in">
-        <input
-          v-model="localQuery"
-          type="text"
-          placeholder="Введите название фильма..."
-          @keydown.enter="applySearch"
-        />
+        <div class="input-wrap">
+          <input
+            v-model="localQuery"
+            type="text"
+            placeholder="Введите название фильма..."
+            @keydown.enter="applySearch"
+          />
+          <button v-if="localQuery" class="clear-btn" @click="clearSearch" aria-label="Очистить поиск">
+            <X :size="18" />
+          </button>
+        </div>
         <button class="btn-primary" @click="applySearch">Найти</button>
       </div>
 
@@ -65,7 +70,7 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Search, Star, Clapperboard } from 'lucide-vue-next'
+import { Search, Star, Clapperboard, X } from 'lucide-vue-next'
 import MovieCard from "@/components/MovieCard.vue";
 import { searchMovies, getPopular, getTopRated, getByGenre } from "@/api/tmdb";
 
@@ -118,6 +123,11 @@ const applySearch = () => {
   if (localQuery.value.trim()) {
     router.push({ path: "/search", query: { q: localQuery.value.trim() } });
   }
+};
+
+const clearSearch = () => {
+  localQuery.value = "";
+  // Фокус на инпут после очистки можно добавить через ref если нужно
 };
 
 const changePage = (p) => {
@@ -173,6 +183,39 @@ onMounted(load);
 
 .search-bar input:focus {
   border-color: var(--accent);
+}
+
+.input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap input {
+  width: 100%;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all var(--transition);
+}
+
+@media (hover: hover) {
+  .clear-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+  }
 }
 
 .movies-grid {
