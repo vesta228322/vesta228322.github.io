@@ -138,10 +138,9 @@ const loadComments = async () => {
     comments.value = commentsData.map(c => ({
       ...c,
       showSpoiler: false,
-      // Временное решение: показываем себя, если это мы. Остальных как "Пользователь"
-      // Для полноценной реализации нужно чтобы функция insert клала имя автора в запись
-      user_name: c.user_id === auth.user.id ? (auth.user.user_metadata.name || auth.user.user_metadata.full_name) : 'Пользователь ' + c.user_id.substring(0,4),
-      user_avatar: c.user_id === auth.user.id ? auth.user.user_metadata.avatar_url : null
+      // Используем данные из базы, если они есть. Иначе фолбек на ID.
+      user_name: c.user_name || 'Пользователь ' + c.user_id.substring(0,4),
+      user_avatar: c.user_avatar || null
     }))
   } catch (err) {
     console.error('Ошибка загрузки комментариев:', err)
@@ -154,6 +153,9 @@ const submitComment = async () => {
   if (!newComment.value.trim() || !auth.user) return
   
   isSubmitting.value = true
+  const displayName = auth.user.user_metadata.name || auth.user.user_metadata.full_name || 'Аноним'
+  const displayAvatar = auth.user.user_metadata.avatar_url || null
+
   try {
     const { data, error } = await supabase
       .from('comments')
@@ -161,7 +163,9 @@ const submitComment = async () => {
         user_id: auth.user.id,
         movie_id: props.movieId,
         content: newComment.value.trim(),
-        has_spoiler: isSpoiler.value
+        has_spoiler: isSpoiler.value,
+        user_name: displayName,
+        user_avatar: displayAvatar
       })
       .select()
       .single()
@@ -172,8 +176,8 @@ const submitComment = async () => {
     comments.value.unshift({
       ...data,
       showSpoiler: false,
-      user_name: auth.user.user_metadata.name || auth.user.user_metadata.full_name || 'ВЫ',
-      user_avatar: auth.user.user_metadata.avatar_url
+      user_name: displayName,
+      user_avatar: displayAvatar
     })
     
     // Очищаем форму
