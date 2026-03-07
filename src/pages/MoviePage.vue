@@ -630,7 +630,7 @@ onMounted(() => load(route.params.id))
     gap: 1.5rem;
   }
   .sidebar { 
-    order: 2;
+    order: 1; /* Постер и рейтинг теперь сверху */
     display: flex;
     flex-direction: row; 
     align-items: stretch; 
@@ -652,9 +652,15 @@ onMounted(() => load(route.params.id))
   .score-row { align-items: flex-start; }
   .score-num { font-size: 1.5rem; }
   .movie-header { order: 1; }
-  .player-section { order: 3; }
-  .cast-section { order: 4; }
-  .similar-section { order: 5; }
+  .player-section { order: 2; } /* Плеер после заголовка */
+  .cast-section { order: 3; }
+  .similar-section { order: 4; }
+  .movie-details { 
+    order: 2; /* Вся правая часть (заголовок, плеер, комменты) под постером */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
   .movie-title { font-size: 1.7rem; }
   .backdrop, .backdrop-overlay { position: fixed; }
 }

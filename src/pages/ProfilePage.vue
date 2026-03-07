@@ -440,12 +440,28 @@ onMounted(() => {
   .profile-header { 
     flex-direction: column; 
     text-align: center; 
-    padding: 2.5rem 1.5rem; 
-    gap: 1.5rem;
+    padding: 2rem 1.5rem; 
+    gap: 1.2rem;
+  }
+  .avatar-large {
+    width: 80px;
+    height: 80px;
+  }
+  .profile-info h1 {
+    font-size: 1.8rem;
   }
   .logout-btn { margin: 0 auto; }
-  .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .stat-card { padding: 2rem 1.5rem; }
+  .stats-grid { 
+    grid-template-columns: 1fr; 
+    gap: 1rem; 
+    margin-bottom: 2rem;
+  }
+  .stat-card { padding: 1.5rem; }
+  .stat-value { font-size: 2.2rem; }
+  .history-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+  }
   .login-card { margin: 2rem 1rem; padding: 2.5rem 1.5rem; }
 }
 </style>
