@@ -13,23 +13,6 @@
             <Clapperboard :size="64" />
           </div>
         </div>
-        <div class="score-box">
-          <div v-if="alloha?.rating_kp" class="score-row">
-            <span class="score-label">Кинопоиск</span>
-            <span class="score-num kp">{{ Number(alloha.rating_kp).toFixed(1) }}</span>
-          </div>
-          <div v-else-if="movie.ratingKinopoisk" class="score-row">
-            <span class="score-label">Кинопоиск</span>
-            <span class="score-num kp">{{ movie.ratingKinopoisk.toFixed(1) }}</span>
-          </div>
-          <div v-if="alloha?.rating_imdb || movie.ratingImdb" class="score-row">
-            <span class="score-label">IMDb</span>
-            <span class="score-num imdb">{{ (alloha?.rating_imdb || movie.ratingImdb).toFixed(1) }}</span>
-          </div>
-          <span v-if="movie.ratingKinopoiskVoteCount" class="score-votes">
-            {{ movie.ratingKinopoiskVoteCount.toLocaleString() }} голосов
-          </span>
-        </div>
       </aside>
 
       <!-- ИНФОРМАЦИЯ -->
@@ -61,6 +44,16 @@
             <span v-if="movie.filmLength"><Clock :size="16" class="meta-icon" /> {{ movie.filmLength }} мин</span>
             <span v-if="movie.countries?.[0]"><Globe :size="16" class="meta-icon" /> {{ movie.countries[0].country }}</span>
             <span v-if="alloha?.quality" class="quality-badge">{{ alloha.quality }}</span>
+            
+            <!-- Рейтинг теперь в конце строки мета-данных -->
+            <div v-if="movie.ratingKinopoisk || alloha?.rating_kp" class="rating-badge kp">
+              <img src="@/assets/kp-logo.svg" alt="КП" class="rating-logo" />
+              <span class="rating-val">{{ (alloha?.rating_kp || movie.ratingKinopoisk).toFixed(1) }}</span>
+            </div>
+            <div v-if="movie.ratingImdb || alloha?.rating_imdb" class="rating-badge imdb">
+              <img src="@/assets/imdb-logo.svg" alt="IMDb" class="rating-logo" />
+              <span class="rating-val">{{ (alloha?.rating_imdb || movie.ratingImdb).toFixed(1) }}</span>
+            </div>
           </div>
 
           <p class="movie-overview">
@@ -412,31 +405,6 @@ onMounted(() => load(route.params.id))
   font-size: 5rem; color: var(--text-muted);
 }
 
-.score-box {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.score-row {
-  display: flex; flex-direction: column; align-items: center; width: 100%;
-}
-
-.score-label {
-  font-size: 0.7rem; text-transform: uppercase;
-  color: var(--text-muted); letter-spacing: 1px;
-}
-
-.score-num { font-size: 2rem; font-weight: 900; color: var(--rating-gold); line-height: 1; }
-.score-num.kp { color: #ff6b00; }
-.score-num.imdb { color: var(--rating-gold); }
-.score-votes { font-size: 0.75rem; color: var(--text-muted); }
-
 .movie-details { display: flex; flex-direction: column; gap: 2.5rem; }
 
 .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
@@ -500,11 +468,42 @@ onMounted(() => load(route.params.id))
   color: #22c55e;
 }
 
-
 .movie-meta {
-  display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;
-  color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
+  display: flex; 
+  align-items: center;
+  flex-wrap: wrap; 
+  gap: 1.25rem; 
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary); 
+  font-size: 0.9rem; 
+  font-weight: 600;
 }
+
+/* Рейтинг */
+.rating-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: default;
+}
+
+.rating-logo {
+  height: 18px;
+  width: auto;
+  object-fit: contain;
+}
+
+.rating-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.rating-badge.kp { color: #ff6b00; }
+.rating-badge.imdb { color: #f5c518; }
 
 .quality-badge {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
@@ -643,13 +642,6 @@ onMounted(() => load(route.params.id))
     flex-shrink: 0; 
     border-radius: var(--radius-md);
   }
-  .score-box { 
-    flex: 1; 
-    justify-content: center;
-    align-items: flex-start; 
-    padding: 0.75rem 1rem; 
-  }
-  .score-row { align-items: flex-start; }
   .score-num { font-size: 1.5rem; }
   .movie-header { order: 1; }
   .player-section { order: 2; } /* Плеер после заголовка */
