@@ -64,7 +64,7 @@
           />
 
           <a 
-            :href="'https://oauth.telegram.org/auth/logout?bot_id=' + telegramBotName" 
+            :href="'https://oauth.telegram.org/auth/logout?bot_id=' + telegramBotId" 
             target="_blank" 
             class="tg-logout-link"
           >
@@ -90,8 +90,10 @@ import TelegramLoginWidget from '@/components/TelegramLoginWidget.vue'
 
 const auth = useAuthStore()
 const history = ref([])
-// Название бота (без @), берется из env или нужно вписать вручную
-const telegramBotName = import.meta.env.VITE_TELEGRAM_BOT_NAME || 'MyKinoFlowBot'
+// Название бота (без @)
+const telegramBotName = import.meta.env.VITE_TELEGRAM_BOT_NAME || 'Kinoo_Flow_bot'
+// ЧИСЛОВОЙ ID бота (нужен для ссылки логаута)
+const telegramBotId = import.meta.env.VITE_TELEGRAM_BOT_ID || ''
 
 const loadHistory = async () => {
   try {
