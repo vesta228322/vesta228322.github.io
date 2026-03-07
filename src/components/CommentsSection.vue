@@ -287,7 +287,7 @@ onMounted(() => {
   color: var(--text-primary);
   font-family: inherit;
   font-size: 0.95rem;
-  resize: vertical;
+  resize: none;
   min-height: 80px;
   transition: all var(--transition);
 }
@@ -313,6 +313,7 @@ onMounted(() => {
   color: #ef4444; /* Красный оттенок для внимания */
   cursor: pointer;
   user-select: none;
+  line-height: 1;
 }
 
 .spoiler-label input { display: none; }
@@ -338,6 +339,7 @@ onMounted(() => {
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+  margin-top: -1px;
 }
 
 /* Кнопка отправки */
@@ -360,6 +362,18 @@ onMounted(() => {
 }
 
 .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+  .form-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
 
 /* Заглушка Auth */
 .auth-prompt {

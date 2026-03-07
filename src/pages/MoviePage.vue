@@ -147,7 +147,7 @@
         </div>
 
         <!-- Комментарии -->
-        <CommentsSection :movieId="route.params.id" />
+        <CommentsSection :movieId="route.params.id" class="movie-comments" />
       </main>
     </div>
   </div>
@@ -655,6 +655,7 @@ onMounted(() => load(route.params.id))
   .player-section { order: 2; } /* Плеер после заголовка */
   .cast-section { order: 3; }
   .similar-section { order: 4; }
+  .movie-comments { order: 10; }
   .movie-details { 
     order: 2; /* Вся правая часть (заголовок, плеер, комменты) под постером */
     display: flex;

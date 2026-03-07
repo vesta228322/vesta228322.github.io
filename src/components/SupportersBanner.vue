@@ -117,12 +117,13 @@ onUnmounted(() => {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(145, 70, 255, 0.2);
-  padding: 0.8rem 0 1.2rem 0; /* Увеличили нижний паддинг, чтобы оторвать контент от полосы загрузки */
+  padding: 0.5rem 0 1rem 0;
   width: 100%;
+  height: var(--banner-height);
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 90; /* Ниже Navbar и BottomNav (z-index 100) */
+  z-index: 95; /* Находится под основным меню мобилок (100) */
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -173,7 +174,7 @@ onUnmounted(() => {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 8px; /* Приподняли саму карточку над линией */
+  bottom: 6px;
 }
 
 @media (hover: hover) {

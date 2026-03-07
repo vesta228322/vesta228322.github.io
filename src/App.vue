@@ -50,16 +50,20 @@ const goRandom = async () => {
 </script>
 
 <style>
+:root {
+  --banner-height: 70px;
+}
+
 .main-layout {
   min-height: 100vh;
   padding-top: var(--nav-height);
-  /* отступ снизу для мобильной панели навигации */
-  padding-bottom: 0;
+  padding-bottom: var(--banner-height);
 }
 
 @media (max-width: 768px) {
   .main-layout {
-    padding-bottom: 60px;
+    /* 64px (bottom-nav) + ~70px (banner on mobile) */
+    padding-bottom: 140px;
   }
 }
 </style>
