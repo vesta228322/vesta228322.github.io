@@ -18,10 +18,10 @@
             <p v-else class="email">ID: {{ auth.user.user_metadata.provider_id }}</p>
             <div class="profile-actions">
               <button @click="auth.logout" class="logout-btn secondary">
-                <LogOut :size="16" /> Выйти с устройства
+                <LogOut :size="16" /> Выйти (Остаться в Telegram)
               </button>
               <button @click="handleFullLogout" class="logout-btn primary">
-                <UserMinus :size="16" /> Сменить аккаунт
+                <UserMinus :size="16" /> Выйти полностью (Забыть аккаунт)
               </button>
             </div>
           </div>
