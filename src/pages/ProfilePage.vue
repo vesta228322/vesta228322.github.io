@@ -64,7 +64,7 @@
           />
 
           <a 
-            :href="'https://oauth.telegram.org/auth/logout?bot_id=' + telegramBotId" 
+            :href="'https://oauth.telegram.org/auth/logout?bot_id=' + telegramBotId + '&origin=' + windowOrigin" 
             target="_blank" 
             class="tg-logout-link"
           >
@@ -92,8 +92,9 @@ const auth = useAuthStore()
 const history = ref([])
 // Название бота (без @)
 const telegramBotName = import.meta.env.VITE_TELEGRAM_BOT_NAME || 'Kinoo_Flow_bot'
-// ЧИСЛОВОЙ ID бота (нужен для ссылки логаута)
+// ЧИСЛОВОЙ ID бота (только цифры до двоеточия из токена)
 const telegramBotId = import.meta.env.VITE_TELEGRAM_BOT_ID || ''
+const windowOrigin = window.location.origin
 
 const loadHistory = async () => {
   try {
