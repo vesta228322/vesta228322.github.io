@@ -63,6 +63,14 @@
             :cornerRadius="12" 
           />
 
+          <a 
+            :href="'https://oauth.telegram.org/auth/logout?bot_id=' + telegramBotName" 
+            target="_blank" 
+            class="tg-logout-link"
+          >
+            Зайти под другим аккаунтом Telegram
+          </a>
+
           <p class="login-footer">
             Мы используем официальный виджет Telegram. Безопасно, быстро и без паролей.
           </p>
@@ -187,6 +195,23 @@ onMounted(() => {
 }
 
 /* Старая кнопка удалена, стили оставлены для .login-footer ниже */
+
+.tg-logout-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--border);
+  opacity: 0.6;
+  transition: all var(--transition);
+}
+
+.tg-logout-link:hover {
+  opacity: 1;
+  color: var(--accent);
+  border-color: var(--accent);
+}
 
 .login-footer {
   margin-top: 2rem;
