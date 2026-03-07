@@ -63,16 +63,8 @@
             :cornerRadius="12" 
           />
 
-          <a 
-            :href="'https://oauth.telegram.org/auth/logout?bot_id=' + telegramBotId + '&origin=' + encodeURIComponent(windowOrigin)" 
-            target="_blank" 
-            class="tg-logout-link"
-            @click="showReloadHint = true"
-          >
-            Зайти под другим аккаунтом Telegram
-          </a>
-          <p v-if="showReloadHint" class="reload-hint">
-            После закрытия вкладки <a href="javascript:location.reload()">обновите эту страницу</a>
+          <p class="logout-instruction">
+            Для того чтобы полностью выйти, используйте мобильное приложение Telegram.
           </p>
 
           <p class="login-footer">
@@ -96,10 +88,6 @@ const auth = useAuthStore()
 const history = ref([])
 // Название бота (без @)
 const telegramBotName = import.meta.env.VITE_TELEGRAM_BOT_NAME || 'Kinoo_Flow_bot'
-// ЧИСЛОВОЙ ID бота (только цифры до двоеточия из токена)
-const telegramBotId = import.meta.env.VITE_TELEGRAM_BOT_ID || ''
-const windowOrigin = window.location.origin
-const showReloadHint = ref(false)
 
 const loadHistory = async () => {
   try {
@@ -204,34 +192,12 @@ onMounted(() => {
 
 /* Старая кнопка удалена, стили оставлены для .login-footer ниже */
 
-.tg-logout-link {
-  display: inline-block;
-  margin-top: 1rem;
+.logout-instruction {
+  margin-top: 1.5rem;
   font-size: 0.75rem;
   color: var(--text-muted);
-  text-decoration: none;
-  border-bottom: 1px dashed var(--border);
-  opacity: 0.6;
-  transition: all var(--transition);
-}
-
-.tg-logout-link:hover {
-  opacity: 1;
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.reload-hint {
-  font-size: 0.7rem;
-  color: var(--accent-2);
-  margin-top: 0.5rem;
-  animation: fadeIn 0.3s ease;
-}
-
-.reload-hint a {
-  color: inherit;
-  font-weight: 800;
-  text-decoration: underline;
+  opacity: 0.7;
+  line-height: 1.4;
 }
 
 .login-footer {
