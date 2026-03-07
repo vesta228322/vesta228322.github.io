@@ -17,11 +17,8 @@
             <p v-if="auth.user.user_metadata.username" class="email">@{{ auth.user.user_metadata.username }}</p>
             <p v-else class="email">ID: {{ auth.user.user_metadata.provider_id }}</p>
             <div class="profile-actions">
-              <button @click="auth.logout" class="logout-btn secondary">
-                <LogOut :size="16" /> Выйти (Остаться в Telegram)
-              </button>
-              <button @click="handleFullLogout" class="logout-btn primary">
-                <UserMinus :size="16" /> Выйти полностью (Забыть аккаунт)
+              <button @click="auth.logout" class="logout-btn primary">
+                <LogOut :size="16" /> Выйти из аккаунта
               </button>
             </div>
           </div>
@@ -79,7 +76,7 @@
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { supabase } from '@/api/supabase'
-import { User, LogOut, Play, Send, Film, UserMinus } from 'lucide-vue-next'
+import { User, LogOut, Play, Send, Film } from 'lucide-vue-next'
 import MovieCard from '@/components/MovieCard.vue'
 import TelegramLoginWidget from '@/components/TelegramLoginWidget.vue'
 
@@ -124,22 +121,6 @@ const loadHistory = async () => {
 onMounted(() => {
   loadHistory()
 })
-
-const handleFullLogout = async () => {
-  // Выходим из самого сервиса
-  await auth.logout()
-  // Пытаемся разлогинить виджет (официального API нет, но сработает очистка localStorage телеграма)
-  // Чтобы наверняка, открываем невидимый iframe на oauth.telegram.org/auth/logout или чистим куки
-  const iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.src = `https://oauth.telegram.org/auth/logout?bot_id=${import.meta.env.VITE_TELEGRAM_BOT_NAME}`;
-  document.body.appendChild(iframe);
-  
-  setTimeout(() => {
-    document.body.removeChild(iframe);
-    window.location.reload();
-  }, 1000);
-}
 </script>
 
 <style scoped>
