@@ -3,6 +3,12 @@
     <!-- Фоновый постер -->
     <div class="backdrop" :style="backdropStyle"></div>
     <div class="backdrop-overlay"></div>
+    
+    <!-- AmbientBackground Blobs -->
+    <div class="ambient-blobs">
+      <div class="ambient-blob blob-1"></div>
+      <div class="ambient-blob blob-2"></div>
+    </div>
 
     <div class="container movie-layout fade-in">
       <!-- ПОСТЕР -->
@@ -355,21 +361,72 @@ onMounted(() => load(route.params.id))
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: blur(18px) brightness(0.15);
+  filter: blur(12px) brightness(0.15);
   transform: scale(1.05);
   z-index: 0;
+  animation: breathing 40s ease-in-out infinite;
+}
+
+@keyframes breathing {
+  0%, 100% { transform: scale(1.05) rotate(0deg); filter: blur(12px) brightness(0.15); }
+  50% { transform: scale(1.15) rotate(1deg); filter: blur(18px) brightness(0.2); }
 }
 
 .backdrop-overlay {
   position: fixed;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 0%, var(--bg-primary) 70%);
-  z-index: 0;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg-primary) 85%);
+  z-index: 1;
+}
+
+/* Ambient Blobs */
+.ambient-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-blob {
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  mix-blend-mode: screen;
+}
+
+.blob-1 {
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: float-1 30s ease-in-out infinite;
+}
+
+.blob-2 {
+  background: radial-gradient(circle, var(--accent-2) 0%, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation: float-2 35s ease-in-out infinite;
+}
+
+@keyframes float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(10vw, 15vh) scale(1.1); }
+  66% { transform: translate(-5vw, 20vh) scale(0.9); }
+}
+
+@keyframes float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-15vw, -10vh) scale(1.2); }
+  66% { transform: translate(-10vw, -20vh) scale(0.8); }
 }
 
 .movie-layout {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 2.5rem;
