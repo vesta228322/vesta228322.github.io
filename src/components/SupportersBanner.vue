@@ -47,27 +47,13 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Heart, ExternalLink, Twitch } from 'lucide-vue-next'
+import supporters from '@/data/supporters.json'
 
 const currentIndex = ref(0)
 const isPaused = ref(false)
 const progress = ref(0)
 const ROTATION_TIME = 12000 // 12 секунд
 const PROGRESS_STEP = 100 // обновляем каждые 100мс
-
-const supporters = [
-  {
-    name: 'vadimaster2000',
-    role: 'VIP Спонсор',
-    avatar: 'https://static-cdn.jtvnw.net/jtv_user_pictures/dea00fe4-c53f-4a7c-abec-896a0c31331d-profile_image-70x70.png',
-    url: 'https://www.twitch.tv/vadimaster2000'
-  },
-  {
-    name: 'y0shi_meow',
-    role: 'VIP Спонсор',
-    avatar: 'https://static-cdn.jtvnw.net/jtv_user_pictures/0abb7633-f11d-4bdd-9308-68cadec71bfd-profile_image-70x70.png',
-    url: 'https://www.twitch.tv/y0shi_meow'
-  }
-]
 
 const currentSupporter = computed(() => supporters[currentIndex.value])
 
