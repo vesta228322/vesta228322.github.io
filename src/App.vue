@@ -12,6 +12,9 @@
 
   <!-- Баннер саппортеров -->
   <SupportersBanner />
+
+  <!-- Тост уведомления -->
+  <ToastContainer />
 </template>
 
 <script setup>
@@ -21,6 +24,7 @@ import NavBar from '@/components/NavBar.vue'
 import AdBlockModal from '@/components/AdBlockModal.vue'
 import ScrollToTop from '@/components/ScrollToTop.vue'
 import SupportersBanner from '@/components/SupportersBanner.vue'
+import ToastContainer from '@/components/ToastContainer.vue'
 import { getRandomKPFilm } from '@/api/kp'
 
 const router = useRouter()
