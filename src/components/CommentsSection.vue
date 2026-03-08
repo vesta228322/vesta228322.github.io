@@ -436,6 +436,7 @@ const setupRealtime = () => {
   if (!supabase || !auth.user) return
   realtimeChannel = supabase
     .channel(`comments-rt-${props.movieId}`)
+    // ─ Новые комментарии ─
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comments' }, ({ new: incoming }) => {
       if (String(incoming.movie_id) !== String(props.movieId)) return
       if (incoming.user_id === auth.user.id) return // свои уже добавлены
@@ -443,13 +444,32 @@ const setupRealtime = () => {
       allComments.value.unshift(stamp(incoming))
       totalCount.value++
     })
+    // ─ Удалённые комментарии ─
     .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'comments' }, ({ old }) => {
       if (allComments.value.some(c => c.id === old.id)) {
         allComments.value = allComments.value.filter(c => c.id !== old.id)
         totalCount.value  = Math.max(0, totalCount.value - 1)
       }
     })
-    .subscribe()
+    // ─ Лайки: +1 от другого пользователя ─
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comment_likes' }, ({ new: like }) => {
+      if (like.user_id === auth.user.id) return // свои уже обновлены оптимистично
+      const id = like.comment_id
+      // Проверяем что лайкнутый комментарий относится к этому фильму
+      if (!allComments.value.some(c => c.id === id)) return
+      likeCounts.value = { ...likeCounts.value, [id]: (likeCounts.value[id] || 0) + 1 }
+    })
+    // ─ Лайки: -1 от другого пользователя ─
+    .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'comment_likes' }, ({ old: like }) => {
+      if (like.user_id === auth.user.id) return
+      const id = like.comment_id
+      if (!allComments.value.some(c => c.id === id)) return
+      likeCounts.value = { ...likeCounts.value, [id]: Math.max(0, (likeCounts.value[id] || 1) - 1) }
+    })
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') console.log('[RT] Connected to comments channel')
+      if (status === 'CHANNEL_ERROR') console.warn('[RT] Channel error – check Supabase publication settings')
+    })
 }
 
 // ─── Lifecycle ─────────────────────────────────────────────────────────
