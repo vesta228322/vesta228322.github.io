@@ -114,6 +114,10 @@
 import { ref, computed, onMounted, watch, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { 
+  Search, 
+  History, 
+  Trash2, 
+  Clapperboard, 
   Play, 
   Megaphone, 
   Dices,
